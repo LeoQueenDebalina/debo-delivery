@@ -1,15 +1,14 @@
 package com.ecommerce.app.debodelivery.entity;
 
-import com.ecommerce.app.debodelivery.service.Type;
+import com.ecommerce.app.debodelivery.eenum.Type;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Data
@@ -25,10 +24,13 @@ public class User {
     private String userName;
     @Column(name = "userEmail")
     private String userEmail;
+    @Column(name = "mobileNumber")
+    private String mobileNumber;
     @Column(name = "password")
     private String password;
     @Column(name = "createdAt")
-    private String createdAt;
+    @Temporal(TemporalType.DATE)
+    private Date createdAt;
     @Column(name = "loginToken")
     private String loginToken;
     @Column(name = "type")
@@ -36,7 +38,7 @@ public class User {
     @Column(name = "address")
     private String address;
     @Column(name = "isEmailVerified")
-    private String isEmailVerified;
-    @Column(name = "mobileNumber")
-    private String mobileNumber;
+    private Boolean isEmailVerified;
+    @Column(name = "isDeleted")
+    private Boolean isDeleted;
 }

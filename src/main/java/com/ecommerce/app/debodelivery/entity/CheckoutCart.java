@@ -1,5 +1,6 @@
 package com.ecommerce.app.debodelivery.entity;
 
+import com.ecommerce.app.debodelivery.eenum.PaymentType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,10 +16,9 @@ public class CheckoutCart {
     @Id
     @Column(name = "checkoutId")
     private String checkoutId;
-    @Column(name = "orderId")
-    private String orderId;
     @Column(name = "paymentType")
-    private String paymentType;
+    @Enumerated(EnumType.STRING)
+    private PaymentType paymentType;
     @Column(name = "deliveryAddress")
     private String deliveryAddress;
     @Column(name = "userId")

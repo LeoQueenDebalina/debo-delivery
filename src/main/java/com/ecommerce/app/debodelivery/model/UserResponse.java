@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserResponse {
-    private String error;
-    private String message;
+    private String userName;
+    private String userEmail;
+    private String address;
+    private String mobileNumber;
 }

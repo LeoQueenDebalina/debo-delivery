@@ -18,12 +18,11 @@ public class AddToCart {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="productId", referencedColumnName = "productId")
     private ProductData productData;
-    @Column(name = "quantity")
-    private String quantity;
     @Column(name = "price")
     private String price;
-    @Column(name = "userId")
-    private String userId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="userId", referencedColumnName = "userId")
+    private User user;
     @Column(name = "addedDate")
     private String addedDate;
     @Column(name = "productName")

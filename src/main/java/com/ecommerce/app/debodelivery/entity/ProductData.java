@@ -24,6 +24,8 @@ public class ProductData {
     private String productName;
     @Column(name = "productActualPrice")
     private String productActualPrice;
+    @Column(name = "discountSellingPrice")
+    private String discountSellingPrice;
     @Column(name = "productSellingPrice")
     private String productSellingPrice;
     @Column(name = "addedOn")
@@ -34,6 +36,8 @@ public class ProductData {
     private String rating;
     @Column(name = "stock")
     private String stock;
+    @Column(name = "productImage")
+    private String productImage;
     @Column(name = "categoryName")
     private String categoryName;
 }

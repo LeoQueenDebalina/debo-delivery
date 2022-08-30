@@ -16,8 +16,6 @@ public class UserRequest {
 //    @NotBlank(message = "")
     private String password;
 //    @NotBlank(message = "")
-    private String createdAt;
-//    @NotBlank(message = "")
     private String loginToken;
 //    @NotBlank(message = "")
     private String address;
