@@ -20,7 +20,7 @@ public class AddToCart {
     private ProductData productData;
     @Column(name = "price")
     private String price;
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="userId", referencedColumnName = "userId")
     private User user;
     @Column(name = "addedDate")

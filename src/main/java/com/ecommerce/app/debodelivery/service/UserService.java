@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -49,7 +50,7 @@ public class UserService {
             String id = this.userRepository.getUserIdByNumber(userRequest.getMobileNumber());
             Optional<User> oldData = this.userRepository.findById(id);
             newData.setUserId(id);
-            if (userRequest.getUserName() != "") {
+            if (!Objects.equals(userRequest.getUserName(), "")) {
                 newData.setUserName(userRequest.getUserName());
             } else {
                 newData.setUserName(oldData.get().getUserName());
@@ -93,7 +94,8 @@ public class UserService {
         if(userRepository.ifNumberIsExist(mobileNumber) && !userRepository.getUserIsDeletedByNumber(mobileNumber)){
             String id = this.userRepository.getUserIdByNumber(mobileNumber);
             Optional<User> data = this.userRepository.findById(id);
-            return new UserResponse(data.get().getUserName(),
+            return new UserResponse(
+                    data.get().getUserName(),
                     data.get().getUserEmail(),
                     data.get().getAddress(),
                     data.get().getMobileNumber());

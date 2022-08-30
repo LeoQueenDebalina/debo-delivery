@@ -9,10 +9,7 @@ import com.ecommerce.app.debodelivery.repository.ProductDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ProductService {
@@ -32,7 +29,7 @@ public class ProductService {
                             .productDescription(productDataRequest.getProductDescription())
                             .stock(productDataRequest.getStock())
                             .rating(productDataRequest.getRating())
-                            .categoryName(productDataRequest.getCategoryName())
+                            .category(categoryRepository.findByCategoryName(productDataRequest.getCategoryName()))
                     .build());
             return new ApiResponse(false,"product added successfully");
         } else {
@@ -42,7 +39,7 @@ public class ProductService {
     public List<ProductDataRequest> getAllProduct() throws DataNotFoundException{
         List<ProductDataRequest> productDataRequests = new ArrayList<>();
         for (ProductData data: this.productDataRepository.findAll()) {
-            productDataRequests.add(new ProductDataRequest(data.getProductName(), data.getProductActualPrice(), data.getProductSellingPrice(), data.getProductDescription(), data.getRating(), data.getStock(), data.getCategoryName()));
+            productDataRequests.add(new ProductDataRequest(data.getProductName(), data.getProductActualPrice(), data.getProductSellingPrice(), data.getProductDescription(), data.getRating(), data.getStock(), data.getCategory().getCategoryName()));
         }
         if (!productDataRequests.isEmpty()){
             return productDataRequests;
@@ -53,7 +50,7 @@ public class ProductService {
     public List<ProductDataRequest> getProductByName(String name) throws DataNotFoundException{
         List<ProductDataRequest> productDataRequests = new ArrayList<>();
         for(ProductData data: this.productDataRepository.findAllByName(name)){
-            productDataRequests.add(new ProductDataRequest(data.getProductName(), data.getProductActualPrice(), data.getProductSellingPrice(), data.getProductDescription(), data.getRating(), data.getStock(), data.getCategoryName()));
+            productDataRequests.add(new ProductDataRequest(data.getProductName(), data.getProductActualPrice(), data.getProductSellingPrice(), data.getProductDescription(), data.getRating(), data.getStock(), data.getCategory().getCategoryName()));
         }
         if (!productDataRequests.isEmpty()){
             return productDataRequests;

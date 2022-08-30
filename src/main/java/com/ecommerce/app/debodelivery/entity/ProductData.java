@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -38,6 +35,7 @@ public class ProductData {
     private String stock;
     @Column(name = "productImage")
     private String productImage;
-    @Column(name = "categoryName")
-    private String categoryName;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="categoryId", referencedColumnName = "categoryId")
+    private Category category;
 }

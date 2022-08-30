@@ -11,4 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface CategoryRepository extends JpaRepository<Category,String> {
     @Query("select case when count(u)>0 then true else false end from Category u where u.categoryName like %:n%")
     public Boolean findByCategory(@Param("n") String category);
+    @Query("select u from Category u where u.categoryName like %:n%")
+    public Category findByCategoryName(@Param("n") String category);
 }

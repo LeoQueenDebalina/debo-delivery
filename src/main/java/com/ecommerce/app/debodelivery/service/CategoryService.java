@@ -1,7 +1,10 @@
 package com.ecommerce.app.debodelivery.service;
 
+import com.ecommerce.app.debodelivery.common.ApiResponse;
 import com.ecommerce.app.debodelivery.entity.Category;
+import com.ecommerce.app.debodelivery.exception.DataNotFoundException;
 import com.ecommerce.app.debodelivery.model.CategoryRequest;
+import com.ecommerce.app.debodelivery.model.ProductDataRequest;
 import com.ecommerce.app.debodelivery.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,18 +15,25 @@ import java.util.*;
 public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
-    public Map<String, String> addCategory(CategoryRequest categoryRequest){
+    public ApiResponse addCategory(CategoryRequest categoryRequest){
         UUID uuid = UUID.randomUUID();
-        Map<String, String> response = new HashMap<>();
-        System.out.println(this.categoryRepository.findByCategory(categoryRequest.getCategoryName()));
         if (!this.categoryRepository.findByCategory(categoryRequest.getCategoryName())) {
-            response.put("error","false");
-            response.put("message","category add successful");
             this.categoryRepository.save(Category.builder().categoryId(String.valueOf(uuid)).categoryName(categoryRequest.getCategoryName()).build());
+            return new ApiResponse(false,"category add successful");
         } else {
-            response.put("error","false");
-            response.put("message","category already added");
+            return new ApiResponse(true,"category already added");
         }
-        return response;
+    }
+    public List<String> getAllCategory() throws DataNotFoundException {
+
+        List<String> list = new ArrayList<>();
+        for (Category data : this.categoryRepository.findAll()) {
+            list.add(data.getCategoryName());
+        }
+        if (list.isEmpty()){
+            throw new DataNotFoundException("No cateory found");
+        }else {
+            return list;
+        }
     }
 }
