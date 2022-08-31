@@ -18,11 +18,17 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping("/addCategory")
-    public ApiResponse addCategory(@RequestBody CategoryRequest categoryRequest){
+    public ApiResponse addCategory(@RequestBody CategoryRequest categoryRequest) {
         return this.categoryService.addCategory(categoryRequest);
     }
+
     @GetMapping("/getAllCategory")
     public List<String> getAllCategory() throws DataNotFoundException {
         return this.categoryService.getAllCategory();
+    }
+
+    @PutMapping("/updateCategory/categoryOldName/{categoryOldName}/categoryUpdatedName/{categoryUpdatedName}")
+    public ApiResponse updateCategory(@PathVariable String categoryOldName, @PathVariable String categoryUpdatedName) {
+        return this.categoryService.updateCategory(categoryOldName, categoryUpdatedName);
     }
 }

@@ -23,8 +23,8 @@ public class CheckoutCart {
     private String deliveryAddress;
     @Column(name = "userId")
     private String userId;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="productId", referencedColumnName = "productId")
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "productId", referencedColumnName = "productId")
     private ProductData productData;
     @Column(name = "quantity")
     private String quantity;

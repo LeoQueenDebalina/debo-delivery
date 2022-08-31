@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Data
@@ -20,22 +21,26 @@ public class ProductData {
     @Column(name = "productName")
     private String productName;
     @Column(name = "productActualPrice")
-    private String productActualPrice;
+    private Integer productActualPrice;
     @Column(name = "discountSellingPrice")
-    private String discountSellingPrice;
+    private Integer discountSellingPrice;
     @Column(name = "productSellingPrice")
-    private String productSellingPrice;
+    private Integer productSellingPrice;
     @Column(name = "addedOn")
-    private String addedOn;
+    @Temporal(TemporalType.DATE)
+    private Date addedOn;
     @Column(name = "productDescription")
     private String productDescription;
     @Column(name = "rating")
-    private String rating;
+    private Float rating;
     @Column(name = "stock")
-    private String stock;
-    @Column(name = "productImage")
-    private String productImage;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="categoryId", referencedColumnName = "categoryId")
+    private Integer stock;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "imageId", referencedColumnName = "imageId")
+    private ProductImage productImage;
+    @Column(name = "companyName")
+    private String companyName;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoryId", referencedColumnName = "categoryId")
     private Category category;
 }

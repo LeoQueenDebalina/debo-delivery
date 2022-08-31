@@ -10,10 +10,7 @@ import com.ecommerce.app.debodelivery.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -22,8 +19,6 @@ public class UserService {
 
     public ApiResponse addUser(UserRequest userRequest) {
         UUID uuid = UUID.randomUUID();
-//        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-//        System.out.println(bCryptPasswordEncoder.encode(userRequest.getPassword()));
         if (!userRepository.ifNumberIsExist(userRequest.getMobileNumber())) {
             this.userRepository.save(User.builder()
                     .userId(String.valueOf(uuid))
@@ -82,16 +77,18 @@ public class UserService {
             return new ApiResponse(true, "mobile number does not exist");
         }
     }
-    public ApiResponse deleteUser(String mobileNumber, Boolean cStatus){
-        if(userRepository.ifNumberIsExist(mobileNumber) && cStatus && !userRepository.getUserIsDeletedByNumber(mobileNumber)){
+
+    public ApiResponse deleteUser(String mobileNumber, Boolean cStatus) {
+        if (userRepository.ifNumberIsExist(mobileNumber) && cStatus && !userRepository.getUserIsDeletedByNumber(mobileNumber)) {
             this.userRepository.deleteAccount(mobileNumber);
-            return new ApiResponse(false,"Your account is successfully deleted");
+            return new ApiResponse(false, "Your account is successfully deleted");
         } else {
-            return new ApiResponse(true,"user not found");
+            return new ApiResponse(true, "user not found");
         }
     }
-    public UserResponse getUserByMobileNumber(String mobileNumber) throws DataNotFoundException{
-        if(userRepository.ifNumberIsExist(mobileNumber) && !userRepository.getUserIsDeletedByNumber(mobileNumber)){
+
+    public UserResponse getUserByMobileNumber(String mobileNumber) throws DataNotFoundException {
+        if (userRepository.ifNumberIsExist(mobileNumber) && !userRepository.getUserIsDeletedByNumber(mobileNumber)) {
             String id = this.userRepository.getUserIdByNumber(mobileNumber);
             Optional<User> data = this.userRepository.findById(id);
             return new UserResponse(
@@ -99,7 +96,7 @@ public class UserService {
                     data.get().getUserEmail(),
                     data.get().getAddress(),
                     data.get().getMobileNumber());
-        }else {
+        } else {
             throw new DataNotFoundException("user not found");
         }
     }

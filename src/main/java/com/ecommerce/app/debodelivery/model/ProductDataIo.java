@@ -11,13 +11,15 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "ProductData")
-public class ProductDataRequest {
-
+public class ProductDataIo {
     private String productName;
-    private String productActualPrice;
-    private String productSellingPrice;
+    private Integer productActualPrice;
+    private Integer discountSellingPrice;
+    private Integer productSellingPrice;
     private String productDescription;
-    private String rating;
-    private String stock;
+    private Float rating;
+    private Integer stock;
     private String categoryName;
+    private String companyName;
+    private String productImageUrl;
 }

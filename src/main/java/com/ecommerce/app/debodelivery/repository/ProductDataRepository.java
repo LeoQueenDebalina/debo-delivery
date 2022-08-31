@@ -1,5 +1,6 @@
 package com.ecommerce.app.debodelivery.repository;
 
+import com.ecommerce.app.debodelivery.entity.Category;
 import com.ecommerce.app.debodelivery.entity.ProductData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -9,7 +10,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductDataRepository extends JpaRepository<ProductData,String> {
+public interface ProductDataRepository extends JpaRepository<ProductData, String> {
     @Query("select u from ProductData u where u.productName like %:n%")
     public List<ProductData> findAllByName(@Param("n") String name);
+
+    @Query("select u from ProductData u where u.category = :n")
+    public List<ProductData> findAllByCategoryId(@Param("n") Category category);
+
+    @Query("select u from ProductData u where u.productSellingPrice < :n")
+    public List<ProductData> findAllByMaxPrice(@Param("n") Integer maxPrice);
 }

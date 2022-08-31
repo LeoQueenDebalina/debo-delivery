@@ -15,21 +15,21 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
     @Bean
-    public Docket api(){
+    public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("debo delivery Project")
+                .groupName("Debo Delivery Project")
                 .select().apis(RequestHandlerSelectors.basePackage("com.ecommerce.app.debodelivery"))
                 .paths(PathSelectors.any())
                 .build().apiInfo(metaData());
     }
 
-    private ApiInfo metaData(){
-        return new ApiInfoBuilder().title("Debo delivery  notification")
-                .description("Sample Documentation Generated Using SWAGGER2 for our Book Rest API")
+    private ApiInfo metaData() {
+        return new ApiInfoBuilder().title("Debo Delivery")
+                .description("Sample Documentation Generated Using SWAGGER2")
                 .termsOfServiceUrl("https://www.google.com")
                 .license("Java License")
                 .licenseUrl("https://www.google.com")
-                .contact(new Contact("Debalina","www.debalina.com","debalina@gmail.com"))
+                .contact(new Contact("Debalina", "www.debalina.com", "debalina@gmail.com"))
                 .version("1.0").build();
     }
 }

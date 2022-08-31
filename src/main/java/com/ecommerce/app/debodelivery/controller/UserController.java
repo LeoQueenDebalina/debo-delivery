@@ -25,14 +25,15 @@ public class UserController {
     public ApiResponse updateUser(@RequestBody UserRequest userRequest) {
         return this.userService.updateUserData(userRequest);
     }
+
     @DeleteMapping("/deleteUser/{mobileNumber}/status/{status}")
     public ApiResponse deleteUser(@PathVariable("mobileNumber") String mobileNumber, @PathVariable Boolean status) {
-        return this.userService.deleteUser(mobileNumber,status);
+        return this.userService.deleteUser(mobileNumber, status);
     }
+
     @GetMapping("/getUserByMobileNumber/{mobileNumber}")
     public UserResponse getUserByMobileNumber(@PathVariable("mobileNumber") String mobileNumber) throws DataNotFoundException {
         return this.userService.getUserByMobileNumber(mobileNumber);
     }
-
 }
 

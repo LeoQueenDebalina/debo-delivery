@@ -15,13 +15,13 @@ public class AddToCart {
     @Id
     @Column(name = "cartId")
     private String cartId;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="productId", referencedColumnName = "productId")
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "productId", referencedColumnName = "productId")
     private ProductData productData;
     @Column(name = "price")
     private String price;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="userId", referencedColumnName = "userId")
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
     @Column(name = "addedDate")
     private String addedDate;
