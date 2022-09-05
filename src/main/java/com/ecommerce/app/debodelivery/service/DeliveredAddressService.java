@@ -50,8 +50,8 @@ public class DeliveredAddressService {
     public ApiResponse deleteAddress(String phoneNumber) {
         if (userRepository.ifNumberIsExist(phoneNumber)) {
             if (deliveryAddressRepository.ifAddressAlreadyExist(userRepository.findByMobileNumber(phoneNumber))) {
-                   DeliveryAddress data = this.deliveryAddressRepository.findAddress(userRepository.findByMobileNumber(phoneNumber));
-                   deliveryAddressRepository.deleteById(data.getDeliveredAddressId());
+                DeliveryAddress data = this.deliveryAddressRepository.findAddress(userRepository.findByMobileNumber(phoneNumber));
+                deliveryAddressRepository.deleteById(data.getDeliveredAddressId());
                 return new ApiResponse(false, "Address deleted successfully");
             } else {
                 return new ApiResponse(true, "Your address is not exist, Please add new address");
@@ -60,45 +60,63 @@ public class DeliveredAddressService {
             return new ApiResponse(true, "User not found");
         }
     }
+
     public ApiResponse updateAddress(DeliveryAddressRequest deliveryAddress) {
         if (userRepository.ifNumberIsExist(deliveryAddress.getUserPhoneNumber())) {
             if (deliveryAddressRepository.ifAddressAlreadyExist(userRepository.findByMobileNumber(deliveryAddress.getUserPhoneNumber()))) {
-                {
-            DeliveryAddress newData = new DeliveryAddress();
+                DeliveryAddress newData = new DeliveryAddress();
+                DeliveryAddress oldData = this.deliveryAddressRepository.findAddress(userRepository.findByMobileNumber(deliveryAddress.getUserPhoneNumber()));
+                newData.setDeliveredAddressId(oldData.getDeliveredAddressId());
+                if (deliveryAddress.getFullName() != "") {
+                    newData.setFullName(deliveryAddress.getFullName());
+                } else {
+                    newData.setFullName(oldData.getFullName());
+                }
+                if (deliveryAddress.getPhoneNumber() != "") {
+                    newData.setPhoneNumber(deliveryAddress.getPhoneNumber());
+                } else {
+                    newData.setPhoneNumber(oldData.getPhoneNumber());
+                }
 
-            DeliveryAddress oldData = this.deliveryAddressRepository.findAddress(userRepository.findByMobileNumber(deliveryAddress.getUserPhoneNumber()));
-            newData.setDeliveredAddressId(oldData.getDeliveredAddressId());
-            if (userRequest.getUserName() != "") {
-                newData.setUserName(userRequest.getUserName());
+                if (deliveryAddress.getPinCode() != 0) {
+                    newData.setPinCode(deliveryAddress.getPinCode());
+                } else {
+                    newData.setPinCode(oldData.getPinCode());
+                }
+                if (deliveryAddress.getState() != "") {
+                    newData.setState(deliveryAddress.getState());
+                } else {
+                    newData.setState(oldData.getState());
+                }
+                if (deliveryAddress.getCity() != "") {
+                    newData.setCity(deliveryAddress.getCity());
+                } else {
+                    newData.setCity(oldData.getCity());
+                }
+                if (deliveryAddress.getHouseNo() != "") {
+                    newData.setHouseNo(deliveryAddress.getHouseNo());
+                } else {
+                    newData.setHouseNo(oldData.getHouseNo());
+                }
+                if (deliveryAddress.getRoadName() != "") {
+                    newData.setRoadName(deliveryAddress.getRoadName());
+                } else {
+                    newData.setRoadName(oldData.getRoadName());
+                }
+                if (String.valueOf(deliveryAddress.getAddressType()) != "") {
+                    newData.setAddressType(deliveryAddress.getAddressType());
+                } else {
+                    newData.setAddressType(oldData.getAddressType());
+                }
+                newData.setUser(oldData.getUser());
+                newData.setDate(oldData.getDate());
+                this.deliveryAddressRepository.save(newData);
+                return new ApiResponse(false, "information updated successfully");
             } else {
-                newData.setUserName(oldData.get().getUserName());
+                return new ApiResponse(true, "Address not found");
             }
-            if (userRequest.getUserEmail() != "") {
-                newData.setUserEmail(userRequest.getUserEmail());
-            } else {
-                newData.setUserEmail(oldData.get().getUserEmail());
-            }
-            newData.setMobileNumber(oldData.get().getMobileNumber());
-            if (userRequest.getPassword() != "") {
-                newData.setPassword(userRequest.getPassword());
-            } else {
-                newData.setPassword(oldData.get().getPassword());
-            }
-            newData.setCreatedAt(oldData.get().getCreatedAt());
-            newData.setLoginToken(oldData.get().getLoginToken());
-            newData.setType(oldData.get().getType());
-            if (userRequest.getAddress() != "") {
-                newData.setAddress(userRequest.getAddress());
-            } else {
-                newData.setAddress(oldData.get().getAddress());
-            }
-            newData.setIsEmailVerified(oldData.get().getIsEmailVerified());
-            newData.setIsDeleted(oldData.get().getIsDeleted());
-            this.userRepository.save(newData);
-            return new ApiResponse(false, "information updated successfully");
         } else {
-            return new ApiResponse(true, "mobile number does not exist");
+            return new ApiResponse(true, "User not found");
         }
     }
-
 }
