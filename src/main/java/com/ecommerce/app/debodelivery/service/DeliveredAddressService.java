@@ -2,16 +2,16 @@ package com.ecommerce.app.debodelivery.service;
 
 import com.ecommerce.app.debodelivery.common.ApiResponse;
 import com.ecommerce.app.debodelivery.entity.DeliveryAddress;
-import com.ecommerce.app.debodelivery.entity.User;
+import com.ecommerce.app.debodelivery.exception.DataNotFoundException;
 import com.ecommerce.app.debodelivery.model.DeliveryAddressRequest;
-import com.ecommerce.app.debodelivery.model.UserRequest;
+import com.ecommerce.app.debodelivery.model.DeliveryAddressResponse;
 import com.ecommerce.app.debodelivery.repository.DeliveryAddressRepository;
 import com.ecommerce.app.debodelivery.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.Optional;
+
 import java.util.UUID;
 
 @Service
@@ -20,6 +20,23 @@ public class DeliveredAddressService {
     private UserRepository userRepository;
     @Autowired
     private DeliveryAddressRepository deliveryAddressRepository;
+
+    public DeliveryAddressResponse getDeliveryAddressByUserPhoneNumber(String userPhone) throws DataNotFoundException {
+        if (userRepository.ifNumberIsExist(userPhone)) {
+            DeliveryAddress data = this.deliveryAddressRepository.findAddress(userRepository.findByMobileNumber(userPhone));
+            return new DeliveryAddressResponse(data.getDeliveredAddressId(),
+                    data.getFullName(),
+                    data.getPhoneNumber(),
+                    data.getPinCode(),
+                    data.getState(),
+                    data.getCity(),
+                    data.getHouseNo(),
+                    data.getRoadName(),
+                    data.getAddressType());
+        } else {
+            throw new DataNotFoundException("address not found");
+        }
+    }
 
     public ApiResponse addAddress(DeliveryAddressRequest deliveryAddress) {
         UUID uuid = UUID.randomUUID();

@@ -33,8 +33,6 @@ public class CheckoutCart {
     @Column(name = "orderStatus")
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
-    @Column(name = "quantity")
-    private Integer quantity;
     @Column(name = "orderDate")
     @Temporal(TemporalType.DATE)
     private Date orderDate;
