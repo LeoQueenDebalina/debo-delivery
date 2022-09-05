@@ -11,7 +11,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "ProductData")
-public class ProductDataIo {
+public class ProductDataRequest {
     private String productName;
     private Integer productActualPrice;
     private Integer discountSellingPrice;

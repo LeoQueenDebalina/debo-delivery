@@ -20,8 +20,9 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     @Query("select u.isDeleted from User u where u.mobileNumber = :n")
     public Boolean getUserIsDeletedByNumber(@Param("n") String number);
-//    @Query("select u from User u where u.mobileNumber = :n")
-//    public User findByUserName(@Param("n") String number);
+
+    @Query("select u from User u where u.mobileNumber = :n")
+    public User findByMobileNumber(@Param("n") String number);
 
     @Transactional
     @Modifying

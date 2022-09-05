@@ -16,7 +16,11 @@ public interface ProductDataRepository extends JpaRepository<ProductData, String
 
     @Query("select u from ProductData u where u.category = :n")
     public List<ProductData> findAllByCategoryId(@Param("n") Category category);
+    @Query("select u from ProductData u where u.productId = :n")
+    public ProductData findProductById(@Param("n") String productId);
 
     @Query("select u from ProductData u where u.productSellingPrice < :n")
     public List<ProductData> findAllByMaxPrice(@Param("n") Integer maxPrice);
+    @Query(value = "select * from product_data limit ?1, ?2", nativeQuery = true)
+    public List<ProductData> findAllByRange(Integer minRange, Integer maxRange);
 }

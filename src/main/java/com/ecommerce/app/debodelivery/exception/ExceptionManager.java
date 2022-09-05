@@ -1,9 +1,7 @@
 package com.ecommerce.app.debodelivery.exception;
 
-//import io.jsonwebtoken.SignatureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -28,12 +26,4 @@ public class ExceptionManager {
         info.put("message", ex.getMessage());
         return new ResponseEntity<>(info, HttpStatus.BAD_REQUEST);
     }
-
-//    @ExceptionHandler(UsernameNotFoundException.class)
-//    public ResponseEntity<Map<String, String>> usernameNotFoundException(UsernameNotFoundException ex) {
-//        Map<String, String> info = new HashMap<>();
-//        info.put("error", "true");
-//        info.put("message", ex.getMessage());
-//        return new ResponseEntity<>(info, HttpStatus.BAD_REQUEST);
-//    }
 }

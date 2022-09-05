@@ -1,5 +1,4 @@
 package com.ecommerce.app.debodelivery.service;
-
 import com.ecommerce.app.debodelivery.common.ApiResponse;
 import com.ecommerce.app.debodelivery.eenum.Type;
 import com.ecommerce.app.debodelivery.entity.User;
@@ -9,7 +8,6 @@ import com.ecommerce.app.debodelivery.model.UserResponse;
 import com.ecommerce.app.debodelivery.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 
 @Service
@@ -45,7 +43,7 @@ public class UserService {
             String id = this.userRepository.getUserIdByNumber(userRequest.getMobileNumber());
             Optional<User> oldData = this.userRepository.findById(id);
             newData.setUserId(id);
-            if (!Objects.equals(userRequest.getUserName(), "")) {
+            if (userRequest.getUserName() != "") {
                 newData.setUserName(userRequest.getUserName());
             } else {
                 newData.setUserName(oldData.get().getUserName());

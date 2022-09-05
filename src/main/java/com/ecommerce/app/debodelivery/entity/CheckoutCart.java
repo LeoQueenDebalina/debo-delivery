@@ -1,11 +1,13 @@
 package com.ecommerce.app.debodelivery.entity;
 
+import com.ecommerce.app.debodelivery.eenum.OrderStatus;
 import com.ecommerce.app.debodelivery.eenum.PaymentType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Data
@@ -19,17 +21,34 @@ public class CheckoutCart {
     @Column(name = "paymentType")
     @Enumerated(EnumType.STRING)
     private PaymentType paymentType;
-    @Column(name = "deliveryAddress")
-    private String deliveryAddress;
-    @Column(name = "userId")
-    private String userId;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "deliveredAddressId", referencedColumnName = "deliveredAddressId")
+    private DeliveryAddress deliveryAddress;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId", referencedColumnName = "userId")
+    private User user;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "productId", referencedColumnName = "productId")
     private ProductData productData;
+    @Column(name = "orderStatus")
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
     @Column(name = "quantity")
-    private String quantity;
+    private Integer quantity;
     @Column(name = "orderDate")
-    private String orderDate;
+    @Temporal(TemporalType.DATE)
+    private Date orderDate;
     @Column(name = "deliveryDate")
-    private String deliveryDate;
+    @Temporal(TemporalType.DATE)
+    private Date deliveryDate;
+    @Column(name = "deliveryStatus")
+    private Boolean deliveryStatus;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "cancelDate")
+    private Date cancelDate;
+    @Column(name = "cancelStatus")
+    private Boolean cancelStatus;
+    @Column(name = "receivedDate")
+    @Temporal(TemporalType.DATE)
+    private Date receivedDate;
 }

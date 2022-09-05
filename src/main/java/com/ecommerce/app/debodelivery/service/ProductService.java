@@ -5,9 +5,11 @@ import com.ecommerce.app.debodelivery.entity.Category;
 import com.ecommerce.app.debodelivery.entity.ProductData;
 import com.ecommerce.app.debodelivery.entity.ProductImage;
 import com.ecommerce.app.debodelivery.exception.DataNotFoundException;
-import com.ecommerce.app.debodelivery.model.ProductDataIo;
+import com.ecommerce.app.debodelivery.model.ProductDataRequest;
+import com.ecommerce.app.debodelivery.model.ProductDataResponse;
 import com.ecommerce.app.debodelivery.repository.CategoryRepository;
 import com.ecommerce.app.debodelivery.repository.ProductDataRepository;
+import com.ecommerce.app.debodelivery.repository.ProductImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +25,10 @@ public class ProductService {
     private CategoryRepository categoryRepository;
     @Autowired
     private ProductDataRepository productDataRepository;
+    @Autowired
+    private ProductImageRepository productImageRepository;
 
-    public ApiResponse addProduct(ProductDataIo productDataRequest) throws FileNotFoundException, IOException {
+    public ApiResponse addProduct(ProductDataRequest productDataRequest) throws FileNotFoundException, IOException {
         UUID uuid = UUID.randomUUID();
         UUID imageUuid = UUID.randomUUID();
         if (this.categoryRepository.findByCategory(productDataRequest.getCategoryName())) {
@@ -60,39 +64,39 @@ public class ProductService {
         }
     }
 
-    public List<ProductDataIo> getAllProduct() throws DataNotFoundException {
-        List<ProductDataIo> productDataRequests = new ArrayList<>();
+    public List<ProductDataResponse> getAllProduct() throws DataNotFoundException {
+        List<ProductDataResponse> productDataResponse = new ArrayList<>();
         for (ProductData data : this.productDataRepository.findAll()) {
-            productDataRequests.add(new ProductDataIo(data.getProductName(), data.getProductActualPrice(), data.getDiscountSellingPrice(), data.getProductSellingPrice(), data.getProductDescription(), data.getRating(), data.getStock(), data.getCategory().getCategoryName(), data.getCompanyName(), data.getProductImage().getImageName()));
+            productDataResponse.add(new ProductDataResponse(data.getProductId(),data.getProductName(), data.getProductActualPrice(), data.getDiscountSellingPrice(), data.getProductSellingPrice(), data.getProductDescription(), data.getRating(), data.getStock(), data.getCategory().getCategoryName(), data.getCompanyName(), data.getProductImage().getImageId()));
         }
-        if (!productDataRequests.isEmpty()) {
-            return productDataRequests;
+        if (!productDataResponse.isEmpty()) {
+            return productDataResponse;
         } else {
             throw new DataNotFoundException("No Information Found");
         }
     }
 
-    public List<ProductDataIo> getProductByName(String name) throws DataNotFoundException {
-        List<ProductDataIo> productDataRequests = new ArrayList<>();
+    public List<ProductDataResponse> getProductByName(String name) throws DataNotFoundException {
+        List<ProductDataResponse> productDataResponse = new ArrayList<>();
         for (ProductData data : this.productDataRepository.findAllByName(name)) {
-            productDataRequests.add(new ProductDataIo(data.getProductName(), data.getProductActualPrice(), data.getDiscountSellingPrice(), data.getProductSellingPrice(), data.getProductDescription(), data.getRating(), data.getStock(), data.getCategory().getCategoryName(), data.getCompanyName(), data.getProductImage().getImageName()));
+            productDataResponse.add(new ProductDataResponse(data.getProductId(),data.getProductName(), data.getProductActualPrice(), data.getDiscountSellingPrice(), data.getProductSellingPrice(), data.getProductDescription(), data.getRating(), data.getStock(), data.getCategory().getCategoryName(), data.getCompanyName(), data.getProductImage().getImageId()));
         }
-        if (!productDataRequests.isEmpty()) {
-            return productDataRequests;
+        if (!productDataResponse.isEmpty()) {
+            return productDataResponse;
         } else {
             throw new DataNotFoundException("No Information Found");
         }
     }
 
-    public List<ProductDataIo> getProductByCategoryName(String name) throws DataNotFoundException {
-        List<ProductDataIo> productDataRequests = new ArrayList<>();
+    public List<ProductDataResponse> getProductByCategoryName(String name) throws DataNotFoundException {
+        List<ProductDataResponse> productDataResponse = new ArrayList<>();
         Category category = this.categoryRepository.findByCategoryName(name);
         if (category != null) {
             for (ProductData data : this.productDataRepository.findAllByCategoryId(category)) {
-                productDataRequests.add(new ProductDataIo(data.getProductName(), data.getProductActualPrice(), data.getDiscountSellingPrice(), data.getProductSellingPrice(), data.getProductDescription(), data.getRating(), data.getStock(), data.getCategory().getCategoryName(), data.getCompanyName(), data.getProductImage().getImageName()));
+                productDataResponse.add(new ProductDataResponse(data.getProductId(),data.getProductName(), data.getProductActualPrice(), data.getDiscountSellingPrice(), data.getProductSellingPrice(), data.getProductDescription(), data.getRating(), data.getStock(), data.getCategory().getCategoryName(), data.getCompanyName(), data.getProductImage().getImageId()));
             }
-            if (!productDataRequests.isEmpty()) {
-                return productDataRequests;
+            if (!productDataResponse.isEmpty()) {
+                return productDataResponse;
             } else {
                 throw new DataNotFoundException("No Information Found");
             }
@@ -101,15 +105,34 @@ public class ProductService {
         }
     }
 
-    public List<ProductDataIo> getProductByMaxPrice(Integer maxPrice) throws DataNotFoundException {
-        List<ProductDataIo> productDataRequests = new ArrayList<>();
+    public List<ProductDataResponse> getProductByMaxPrice(Integer maxPrice) throws DataNotFoundException {
+        List<ProductDataResponse> productDataResponse = new ArrayList<>();
         for (ProductData data : this.productDataRepository.findAllByMaxPrice(maxPrice)) {
-            productDataRequests.add(new ProductDataIo(data.getProductName(), data.getProductActualPrice(), data.getDiscountSellingPrice(), data.getProductSellingPrice(), data.getProductDescription(), data.getRating(), data.getStock(), data.getCategory().getCategoryName(), data.getCompanyName(), data.getProductImage().getImageName()));
+            productDataResponse.add(new ProductDataResponse(data.getProductId(),data.getProductName(), data.getProductActualPrice(), data.getDiscountSellingPrice(), data.getProductSellingPrice(), data.getProductDescription(), data.getRating(), data.getStock(), data.getCategory().getCategoryName(), data.getCompanyName(), data.getProductImage().getImageId()));
         }
-        if (!productDataRequests.isEmpty()) {
-            return productDataRequests;
+        if (!productDataResponse.isEmpty()) {
+            return productDataResponse;
         } else {
             throw new DataNotFoundException("No Information Found");
+        }
+    }
+    public List<ProductDataResponse> getProductByGivenRange(Integer minRange,Integer maxRange) throws DataNotFoundException {
+        List<ProductDataResponse> productDataResponse = new ArrayList<>();
+        for (ProductData data : this.productDataRepository.findAllByRange(minRange,maxRange)) {
+            productDataResponse.add(new ProductDataResponse(data.getProductId(),data.getProductName(), data.getProductActualPrice(), data.getDiscountSellingPrice(), data.getProductSellingPrice(), data.getProductDescription(), data.getRating(), data.getStock(), data.getCategory().getCategoryName(), data.getCompanyName(), data.getProductImage().getImageId()));
+        }
+        if (!productDataResponse.isEmpty()) {
+            return productDataResponse;
+        } else {
+            throw new DataNotFoundException("No Information Found");
+        }
+    }
+    public byte[] imageData(String imageId) throws FileNotFoundException{
+        Optional<ProductImage> data = this.productImageRepository.findById(imageId);
+        if (data.isPresent()){
+            return data.get().getImageData();
+        } else {
+            throw new FileNotFoundException("Image Not Found");
         }
     }
 }
