@@ -1,8 +1,9 @@
 package com.ecommerce.app.debodelivery.entity;
 
-import com.ecommerce.app.debodelivery.eenum.OrderStatus;
-import com.ecommerce.app.debodelivery.eenum.PaymentType;
+import com.ecommerce.app.debodelivery.util.OrderStatus;
+import com.ecommerce.app.debodelivery.util.PaymentType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,8 +14,9 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "CheckoutCart")
-public class CheckoutCart {
+@Table(name = "Checkout")
+@Builder
+public class Checkout {
     @Id
     @Column(name = "checkoutId")
     private String checkoutId;
@@ -46,7 +48,14 @@ public class CheckoutCart {
     private Date cancelDate;
     @Column(name = "cancelStatus")
     private Boolean cancelStatus;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "cancelLastDate")
+    private Date cancelLastDate;
+    @Column(name = "cancelBlockStatus")
+    private Boolean cancelBlockStatus;
     @Column(name = "receivedDate")
     @Temporal(TemporalType.DATE)
     private Date receivedDate;
+    @Column(name = "receivedStatus")
+    private Boolean receivedStatus;
 }

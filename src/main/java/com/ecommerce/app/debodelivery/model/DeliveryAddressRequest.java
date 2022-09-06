@@ -1,6 +1,6 @@
 package com.ecommerce.app.debodelivery.model;
 
-import com.ecommerce.app.debodelivery.eenum.AddressType;
+import com.ecommerce.app.debodelivery.util.AddressType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

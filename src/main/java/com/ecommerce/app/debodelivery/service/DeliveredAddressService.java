@@ -54,6 +54,7 @@ public class DeliveredAddressService {
                         .roadName(deliveryAddress.getRoadName())
                         .addressType(deliveryAddress.getAddressType())
                         .date(new Date())
+                        .isDeleted(false)
                         .build());
                 return new ApiResponse(false, "Address added successfully");
             } else {
@@ -64,19 +65,18 @@ public class DeliveredAddressService {
         }
     }
 
-    public ApiResponse deleteAddress(String phoneNumber) {
-        if (userRepository.ifNumberIsExist(phoneNumber)) {
-            if (deliveryAddressRepository.ifAddressAlreadyExist(userRepository.findByMobileNumber(phoneNumber))) {
-                DeliveryAddress data = this.deliveryAddressRepository.findAddress(userRepository.findByMobileNumber(phoneNumber));
-                deliveryAddressRepository.deleteById(data.getDeliveredAddressId());
-                return new ApiResponse(false, "Address deleted successfully");
-            } else {
-                return new ApiResponse(true, "Your address is not exist, Please add new address");
-            }
-        } else {
-            return new ApiResponse(true, "User not found");
-        }
-    }
+//    public ApiResponse deleteAddress(String phoneNumber) {
+//        if (userRepository.ifNumberIsExist(phoneNumber)) {
+//            if (deliveryAddressRepository.ifAddressAlreadyExist(userRepository.findByMobileNumber(phoneNumber))) {
+//                this.deliveryAddressRepository.deleteAddress(userRepository.findByMobileNumber(phoneNumber));
+//                return new ApiResponse(false, "Address deleted successfully");
+//            } else {
+//                return new ApiResponse(true, "Your address is not exist, Please add new address");
+//            }
+//        } else {
+//            return new ApiResponse(true, "User not found");
+//        }
+//    }
 
     public ApiResponse updateAddress(DeliveryAddressRequest deliveryAddress) {
         if (userRepository.ifNumberIsExist(deliveryAddress.getUserPhoneNumber())) {

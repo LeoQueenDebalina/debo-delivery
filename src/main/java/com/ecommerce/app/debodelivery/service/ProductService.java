@@ -49,7 +49,7 @@ public class ProductService {
                     .productName(productDataRequest.getProductName())
                     .productActualPrice(productDataRequest.getProductActualPrice())
                     .discountSellingPrice(productDataRequest.getDiscountSellingPrice())
-                    .productSellingPrice(productDataRequest.getProductSellingPrice())
+                    .productSellingPrice(productDataRequest.getProductActualPrice()-productDataRequest.getDiscountSellingPrice())
                     .addedOn(new Date())
                     .productDescription(productDataRequest.getProductDescription())
                     .stock(productDataRequest.getStock())

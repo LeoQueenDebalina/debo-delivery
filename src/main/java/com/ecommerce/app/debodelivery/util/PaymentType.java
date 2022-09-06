@@ -1,4 +1,4 @@
-package com.ecommerce.app.debodelivery.eenum;
+package com.ecommerce.app.debodelivery.util;
 
 public enum PaymentType {
     CARD,

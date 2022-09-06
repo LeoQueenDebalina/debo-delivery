@@ -15,7 +15,6 @@ public class ProductDataRequest {
     private String productName;
     private Integer productActualPrice;
     private Integer discountSellingPrice;
-    private Integer productSellingPrice;
     private String productDescription;
     private Float rating;
     private Integer stock;

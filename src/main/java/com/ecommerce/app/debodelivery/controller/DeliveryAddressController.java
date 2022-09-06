@@ -23,10 +23,10 @@ public class DeliveryAddressController {
     public ApiResponse addAddress(@RequestBody DeliveryAddressRequest deliveryAddressRequest){
         return this.deliveredAddressService.addAddress(deliveryAddressRequest);
     }
-    @DeleteMapping("/deleteAddress/{mobileNumber}")
-    public ApiResponse deleteAddress(@PathVariable String mobileNumber){
-        return this.deliveredAddressService.deleteAddress(mobileNumber);
-    }
+//    @DeleteMapping("/deleteAddress/{mobileNumber}")
+//    public ApiResponse deleteAddress(@PathVariable String mobileNumber){
+//        return this.deliveredAddressService.deleteAddress(mobileNumber);
+//    }
     @PutMapping("/updateAddress")
     public ApiResponse updateAddress(@RequestBody DeliveryAddressRequest deliveryAddressRequest){
         return this.deliveredAddressService.updateAddress(deliveryAddressRequest);

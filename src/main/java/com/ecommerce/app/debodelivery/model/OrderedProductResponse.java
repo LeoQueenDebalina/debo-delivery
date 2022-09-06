@@ -1,7 +1,7 @@
 package com.ecommerce.app.debodelivery.model;
 
-import com.ecommerce.app.debodelivery.eenum.OrderStatus;
-import com.ecommerce.app.debodelivery.eenum.PaymentType;
+import com.ecommerce.app.debodelivery.util.OrderStatus;
+import com.ecommerce.app.debodelivery.util.PaymentType;
 import com.ecommerce.app.debodelivery.entity.DeliveryAddress;
 import com.ecommerce.app.debodelivery.entity.ProductData;
 
@@ -16,8 +16,8 @@ import java.util.Date;
 public class OrderedProductResponse {
     private String checkoutId;
     private PaymentType paymentType;
-    private DeliveryAddress deliveryAddress;
-    private ProductData productData;
+    private String deliveryAddressId;
+    private String productDataId;
     private OrderStatus orderStatus;
     private Date orderDate;
     private Date deliveryDate;

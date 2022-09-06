@@ -3,6 +3,7 @@ package com.ecommerce.app.debodelivery.service;
 import com.ecommerce.app.debodelivery.common.ApiResponse;
 import com.ecommerce.app.debodelivery.entity.AddToCart;
 import com.ecommerce.app.debodelivery.exception.DataNotFoundException;
+import com.ecommerce.app.debodelivery.model.TotalPriceInCartResponse;
 import com.ecommerce.app.debodelivery.model.ViewCartResponse;
 import com.ecommerce.app.debodelivery.repository.AddToCartRepository;
 import com.ecommerce.app.debodelivery.repository.ProductDataRepository;
@@ -67,12 +68,39 @@ public class CartService {
     public List<ViewCartResponse> viewCart(String userMobileNumber) throws DataNotFoundException{
         if (userRepository.ifNumberIsExist(userMobileNumber)) {
             List<ViewCartResponse> rData= new ArrayList<>();
-            for (AddToCart data: this.addToCartRepository.selectByAllCartData(userRepository.findByMobileNumber(userMobileNumber))){
-
+            for (AddToCart data : this.addToCartRepository.selectByAllCartData(userRepository.findByMobileNumber(userMobileNumber))){
+                rData.add(new ViewCartResponse(
+                        data.getProductData().getProductId(),
+                        data.getProductData().getProductName(),
+                        data.getProductData().getProductSellingPrice(),
+                        data.getCartId()));
+            }
+            if (rData.isEmpty()){
+                throw new DataNotFoundException("No Cart Item found");
             }
             return rData;
         } else {
-            throw new DataNotFoundException("");
+            throw new DataNotFoundException("User Not Found");
         }
     }
+    public TotalPriceInCartResponse totalPriceInCart(String userPhoneNumber) throws DataNotFoundException{
+        Integer productActualPrice=0;
+        Integer discountSellingPrice=0;
+        Integer productSellingPrice=0;
+        if (userRepository.ifNumberIsExist(userPhoneNumber)) {
+            for (AddToCart data : this.addToCartRepository.selectByAllCartData(userRepository.findByMobileNumber(userPhoneNumber))){
+                productActualPrice+= data.getProductData().getProductActualPrice();
+                discountSellingPrice+= data.getProductData().getDiscountSellingPrice();
+                productSellingPrice+= data.getProductData().getProductSellingPrice();
+            }
+            if (productActualPrice!=0){
+                return new TotalPriceInCartResponse(productActualPrice,discountSellingPrice,productSellingPrice);
+            } else {
+                return new TotalPriceInCartResponse();
+            }
+        } else {
+            throw new DataNotFoundException("User Not Found");
+        }
+    }
+
 }

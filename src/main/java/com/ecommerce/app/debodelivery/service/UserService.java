@@ -1,6 +1,6 @@
 package com.ecommerce.app.debodelivery.service;
 import com.ecommerce.app.debodelivery.common.ApiResponse;
-import com.ecommerce.app.debodelivery.eenum.Type;
+import com.ecommerce.app.debodelivery.util.Type;
 import com.ecommerce.app.debodelivery.entity.User;
 import com.ecommerce.app.debodelivery.exception.DataNotFoundException;
 import com.ecommerce.app.debodelivery.model.UserRequest;

@@ -1,6 +1,6 @@
 package com.ecommerce.app.debodelivery.entity;
 
-import com.ecommerce.app.debodelivery.eenum.Type;
+import com.ecommerce.app.debodelivery.util.Type;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
