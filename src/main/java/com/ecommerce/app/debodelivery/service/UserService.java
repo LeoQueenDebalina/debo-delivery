@@ -1,4 +1,5 @@
 package com.ecommerce.app.debodelivery.service;
+
 import com.ecommerce.app.debodelivery.common.ApiResponse;
 import com.ecommerce.app.debodelivery.util.Type;
 import com.ecommerce.app.debodelivery.entity.User;
@@ -7,13 +8,21 @@ import com.ecommerce.app.debodelivery.model.UserRequest;
 import com.ecommerce.app.debodelivery.model.UserResponse;
 import com.ecommerce.app.debodelivery.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.*;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
     public ApiResponse addUser(UserRequest userRequest) {
         UUID uuid = UUID.randomUUID();
@@ -22,7 +31,7 @@ public class UserService {
                     .userId(String.valueOf(uuid))
                     .userName(userRequest.getUserName())
                     .userEmail(userRequest.getUserEmail())
-                    .password(userRequest.getPassword())
+                    .password(bCryptPasswordEncoder.encode(userRequest.getPassword()))
                     .createdAt(new Date())
                     .loginToken(userRequest.getLoginToken())
                     .type(Type.USER)
@@ -97,5 +106,11 @@ public class UserService {
         } else {
             throw new DataNotFoundException("user not found");
         }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = this.userRepository.findByMobileNumber(username);
+        return new org.springframework.security.core.userdetails.User(user.getMobileNumber(), user.getPassword(), new ArrayList<>());
     }
 }

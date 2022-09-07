@@ -22,16 +22,19 @@ public class AddToCartController {
     public List<ViewCartResponse> viewCart(@PathVariable String userMobileNumber) throws DataNotFoundException {
         return this.cartService.viewCart(userMobileNumber);
     }
+
     @PostMapping("/addProductToCart/userMobileNumber/{userMobileNumber}/productId/{productId}")
-    public ApiResponse addProductToCart(@PathVariable String userMobileNumber,@PathVariable String productId) {
+    public ApiResponse addProductToCart(@PathVariable String userMobileNumber, @PathVariable String productId) {
         return this.cartService.addProductToCart(userMobileNumber, productId);
     }
+
     @GetMapping("/totalPriceInCart/userPhoneNumber/{userPhoneNumber}")
-    public TotalPriceInCartResponse totalPriceInCart(@PathVariable String userPhoneNumber) throws DataNotFoundException{
+    public TotalPriceInCartResponse totalPriceInCart(@PathVariable String userPhoneNumber) throws DataNotFoundException {
         return this.cartService.totalPriceInCart(userPhoneNumber);
     }
+
     @DeleteMapping("/deleteProductFromCart/userMobileNumber/{userMobileNumber}/productId/{productId}")
-    public ApiResponse deleteProductFromCart(@PathVariable String userMobileNumber,@PathVariable String productId) {
+    public ApiResponse deleteProductFromCart(@PathVariable String userMobileNumber, @PathVariable String productId) {
         return this.cartService.deleteProductFromCart(userMobileNumber, productId);
     }
 }

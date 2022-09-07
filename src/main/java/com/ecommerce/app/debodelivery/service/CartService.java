@@ -68,7 +68,7 @@ public class CartService {
     public List<ViewCartResponse> viewCart(String userMobileNumber) throws DataNotFoundException{
         if (userRepository.ifNumberIsExist(userMobileNumber)) {
             List<ViewCartResponse> rData= new ArrayList<>();
-            for (AddToCart data : this.addToCartRepository.selectByAllCartData(userRepository.findByMobileNumber(userMobileNumber))){
+            for (AddToCart data : this.addToCartRepository.selectAllCartDataByUser(userRepository.findByMobileNumber(userMobileNumber))){
                 rData.add(new ViewCartResponse(
                         data.getProductData().getProductId(),
                         data.getProductData().getProductName(),
@@ -88,7 +88,7 @@ public class CartService {
         Integer discountSellingPrice=0;
         Integer productSellingPrice=0;
         if (userRepository.ifNumberIsExist(userPhoneNumber)) {
-            for (AddToCart data : this.addToCartRepository.selectByAllCartData(userRepository.findByMobileNumber(userPhoneNumber))){
+            for (AddToCart data : this.addToCartRepository.selectAllCartDataByUser(userRepository.findByMobileNumber(userPhoneNumber))){
                 productActualPrice+= data.getProductData().getProductActualPrice();
                 discountSellingPrice+= data.getProductData().getDiscountSellingPrice();
                 productSellingPrice+= data.getProductData().getProductSellingPrice();

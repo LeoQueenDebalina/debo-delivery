@@ -12,10 +12,15 @@ import java.util.List;
 
 @Repository
 public interface AddToCartRepository extends JpaRepository<AddToCart, String> {
-   @Query("select case when count(u)>0 then true else false end from AddToCart u where u.productData=:n and u.user=:m")
-   public Boolean isExistCart(@Param("n") ProductData productData, @Param("m") User user);
-   @Query("select u from AddToCart u where u.productData=:n and u.user=:m")
-   public AddToCart selectByProductData(@Param("n") ProductData productData, @Param("m") User user);
-   @Query("select u from AddToCart u where u.user=:m")
-   public List<AddToCart> selectByAllCartData(@Param("m") User user);
+    @Query("select case when count(u)>0 then true else false end from AddToCart u where u.productData=:n and u.user=:m")
+    public Boolean isExistCart(@Param("n") ProductData productData, @Param("m") User user);
+
+    @Query("select case when count(u)>0 then true else false end from AddToCart u where u.user=:m")
+    public Boolean isExistCartCheckByUser(@Param("m") User user);
+
+    @Query("select u from AddToCart u where u.productData=:n and u.user=:m")
+    public AddToCart selectByProductData(@Param("n") ProductData productData, @Param("m") User user);
+
+    @Query("select u from AddToCart u where u.user=:m")
+    public List<AddToCart> selectAllCartDataByUser(@Param("m") User user);
 }

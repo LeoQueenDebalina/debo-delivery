@@ -2,6 +2,8 @@ package com.ecommerce.app.debodelivery.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -21,6 +23,30 @@ public class ExceptionManager {
 
     @ExceptionHandler(FileNotFoundException.class)
     public ResponseEntity<Map<String, String>> fileNotFoundException(FileNotFoundException ex) {
+        Map<String, String> info = new HashMap<>();
+        info.put("error", "true");
+        info.put("message", ex.getMessage());
+        return new ResponseEntity<>(info, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<Map<String, String>> usernameNotFoundException(UsernameNotFoundException ex) {
+        Map<String, String> info = new HashMap<>();
+        info.put("error", "true");
+        info.put("message", ex.getMessage());
+        return new ResponseEntity<>(info, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Map<String, String>> badCredentialsException(BadCredentialsException ex) {
+        Map<String, String> info = new HashMap<>();
+        info.put("error", "true");
+        info.put("message", ex.getMessage());
+        return new ResponseEntity<>(info, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, String>> expiredJwtException(Exception ex) {
         Map<String, String> info = new HashMap<>();
         info.put("error", "true");
         info.put("message", ex.getMessage());

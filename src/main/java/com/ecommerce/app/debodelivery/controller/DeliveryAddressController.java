@@ -15,20 +15,19 @@ import org.springframework.web.bind.annotation.*;
 public class DeliveryAddressController {
     @Autowired
     private DeliveredAddressService deliveredAddressService;
+
     @GetMapping("/viewAddress/{userPhone}")
     public DeliveryAddressResponse getDeliveryAddressByUserPhoneNumber(@PathVariable String userPhone) throws DataNotFoundException {
         return this.deliveredAddressService.getDeliveryAddressByUserPhoneNumber(userPhone);
     }
+
     @PostMapping("/addAddress")
-    public ApiResponse addAddress(@RequestBody DeliveryAddressRequest deliveryAddressRequest){
+    public ApiResponse addAddress(@RequestBody DeliveryAddressRequest deliveryAddressRequest) {
         return this.deliveredAddressService.addAddress(deliveryAddressRequest);
     }
-//    @DeleteMapping("/deleteAddress/{mobileNumber}")
-//    public ApiResponse deleteAddress(@PathVariable String mobileNumber){
-//        return this.deliveredAddressService.deleteAddress(mobileNumber);
-//    }
+
     @PutMapping("/updateAddress")
-    public ApiResponse updateAddress(@RequestBody DeliveryAddressRequest deliveryAddressRequest){
+    public ApiResponse updateAddress(@RequestBody DeliveryAddressRequest deliveryAddressRequest) {
         return this.deliveredAddressService.updateAddress(deliveryAddressRequest);
     }
 }

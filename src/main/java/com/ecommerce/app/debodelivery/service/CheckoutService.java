@@ -1,15 +1,13 @@
 package com.ecommerce.app.debodelivery.service;
 
 import com.ecommerce.app.debodelivery.common.ApiResponse;
+import com.ecommerce.app.debodelivery.entity.AddToCart;
 import com.ecommerce.app.debodelivery.entity.OrderCancelDetails;
 import com.ecommerce.app.debodelivery.entity.OrderFeedback;
-import com.ecommerce.app.debodelivery.model.OrderCancelRequest;
-import com.ecommerce.app.debodelivery.model.OrderProductFeedBackRequest;
+import com.ecommerce.app.debodelivery.model.*;
 import com.ecommerce.app.debodelivery.util.OrderStatus;
 import com.ecommerce.app.debodelivery.entity.Checkout;
 import com.ecommerce.app.debodelivery.exception.DataNotFoundException;
-import com.ecommerce.app.debodelivery.model.OrderedProductRequest;
-import com.ecommerce.app.debodelivery.model.OrderedProductResponse;
 import com.ecommerce.app.debodelivery.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,32 +36,37 @@ public class CheckoutService {
         if (userRepository.ifNumberIsExist(orderedProductRequest.getUserMobileNumber())) {
             if (productDataRepository.existsById(orderedProductRequest.getProductId())) {
                 if (deliveryAddressRepository.ifAddressAlreadyExist(userRepository.findByMobileNumber(orderedProductRequest.getUserMobileNumber()))) {
-                    this.checkOutRepository.save(Checkout.builder()
-                            .checkoutId(String.valueOf(uuid))
-                            .paymentType(orderedProductRequest.getPaymentType())
-                            .deliveryAddress(deliveryAddressRepository.findAddress(userRepository.findByMobileNumber(orderedProductRequest.getUserMobileNumber())))
-                            .user(userRepository.findByMobileNumber(orderedProductRequest.getUserMobileNumber()))
-                            .productData(productDataRepository.findProductById(orderedProductRequest.getProductId()))
-                            .orderStatus(OrderStatus.ORDERED)
-                            .orderDate(new Date())
-                            .deliveryDate(new Date(new Date().getTime() + (new Random().nextInt(4) + 6) * 24 * 60 * 60 * 1000))
-                            .deliveryStatus(false)
-                            .cancelLastDate(null)
-                            .cancelBlockStatus(false)
-                            .cancelDate(null)
-                            .cancelStatus(false)
-                            .receivedDate(null)
-                            .receivedStatus(false)
-                            .build());
-                    return new ApiResponse(false, "you successfully placed the order");
+                    if (productDataRepository.findProductById(orderedProductRequest.getProductId()).getStock() != 0) {
+                        this.checkOutRepository.save(Checkout.builder()
+                                .checkoutId(String.valueOf(uuid))
+                                .paymentType(orderedProductRequest.getPaymentType())
+                                .deliveryAddress(deliveryAddressRepository.findAddress(userRepository.findByMobileNumber(orderedProductRequest.getUserMobileNumber())))
+                                .user(userRepository.findByMobileNumber(orderedProductRequest.getUserMobileNumber()))
+                                .productData(productDataRepository.findProductById(orderedProductRequest.getProductId()))
+                                .orderStatus(OrderStatus.ORDERED)
+                                .orderDate(new Date())
+                                .deliveryDate(new Date(new Date().getTime() + (new Random().nextInt(4) + 6) * 24 * 60 * 60 * 1000))
+                                .deliveryStatus(false)
+                                .cancelLastDate(null)
+                                .cancelBlockStatus(false)
+                                .cancelDate(null)
+                                .cancelStatus(false)
+                                .receivedDate(null)
+                                .receivedStatus(false)
+                                .build());
+                        this.productDataRepository.removeStock(orderedProductRequest.getProductId());
+                        return new ApiResponse(false, "you successfully placed the order");
+                    } else {
+                        return new ApiResponse(true, "This product is out of stock");
+                    }
                 } else {
-                    return new ApiResponse(false, "Address Not Found");
+                    return new ApiResponse(true, "Address Not Found");
                 }
             } else {
-                return new ApiResponse(false, "Product Not Found");
+                return new ApiResponse(true, "Product Not Found");
             }
         } else {
-            return new ApiResponse(false, "User Not Found");
+            return new ApiResponse(true, "User Not Found");
         }
     }
 
@@ -99,21 +102,22 @@ public class CheckoutService {
                         if (oldData.get().getDeliveryStatus()) {
                             newData.setDeliveryDate(oldData.get().getDeliveryDate());
                             newData.setDeliveryStatus(oldData.get().getDeliveryStatus());
+
+                            newData.setReceivedDate(new Date(new Date().getTime() + (new Random().nextInt(4) + 6) * 24 * 60 * 60 * 1000));
+                            newData.setReceivedStatus(true);
                         } else {
                             newData.setDeliveryDate(null);
                             newData.setDeliveryStatus(false);
+
+                            newData.setReceivedDate(oldData.get().getReceivedDate());
+                            newData.setReceivedStatus(oldData.get().getReceivedStatus());
+
+                            this.productDataRepository.addStock(oldData.get().getProductData().getProductId());
                         }
                         newData.setReceivedDate(null);
                         newData.setReceivedStatus(false);
                         newData.setCancelDate(new Date());
                         newData.setCancelStatus(true);
-                        if (oldData.get().getDeliveryStatus()) {
-                            newData.setReceivedDate(new Date(new Date().getTime() + (new Random().nextInt(4) + 6) * 24 * 60 * 60 * 1000));
-                            newData.setReceivedStatus(true);
-                        } else {
-                            newData.setReceivedDate(oldData.get().getReceivedDate());
-                            newData.setReceivedStatus(oldData.get().getReceivedStatus());
-                        }
                         this.checkOutRepository.save(newData);
                         if (orderCancelRequest.getFeedbackMessage() != "") {
                             UUID uuid = UUID.randomUUID();
@@ -171,9 +175,40 @@ public class CheckoutService {
         }
     }
 
-    public ApiResponse OrderProductFromCart(String mobileNumber) {
-        if (userRepository.ifNumberIsExist(mobileNumber)) {
-            return new ApiResponse(false, "you successfully placed the order");
+    public ApiResponse orderProductFromCart(CartProductOrderedRequest cartProductOrderedRequest) {
+        if (userRepository.ifNumberIsExist(cartProductOrderedRequest.getUserMobileNumber())) {
+            if (addToCartRepository.isExistCartCheckByUser(userRepository.findByMobileNumber(cartProductOrderedRequest.getUserMobileNumber()))) {
+                if (deliveryAddressRepository.ifAddressAlreadyExist(userRepository.findByMobileNumber(cartProductOrderedRequest.getUserMobileNumber()))) {
+                    for (AddToCart data : this.addToCartRepository.selectAllCartDataByUser(userRepository.findByMobileNumber(cartProductOrderedRequest.getUserMobileNumber()))) {
+                        UUID uuid = UUID.randomUUID();
+                        if (productDataRepository.existsById(data.getProductData().getProductId()) && productDataRepository.findProductById(data.getProductData().getProductId()).getStock() != 0) {
+                            this.checkOutRepository.save(Checkout.builder()
+                                    .checkoutId(String.valueOf(uuid))
+                                    .paymentType(cartProductOrderedRequest.getPaymentType())
+                                    .deliveryAddress(deliveryAddressRepository.findAddress(userRepository.findByMobileNumber(cartProductOrderedRequest.getUserMobileNumber())))
+                                    .user(userRepository.findByMobileNumber(cartProductOrderedRequest.getUserMobileNumber()))
+                                    .productData(productDataRepository.findProductById(data.getProductData().getProductId()))
+                                    .orderStatus(OrderStatus.ORDERED)
+                                    .orderDate(new Date())
+                                    .deliveryDate(new Date(new Date().getTime() + (new Random().nextInt(4) + 6) * 24 * 60 * 60 * 1000))
+                                    .deliveryStatus(false)
+                                    .cancelLastDate(null)
+                                    .cancelBlockStatus(false)
+                                    .cancelDate(null)
+                                    .cancelStatus(false)
+                                    .receivedDate(null)
+                                    .receivedStatus(false)
+                                    .build());
+                            this.productDataRepository.removeStock(data.getProductData().getProductId());
+                        }
+                    }
+                    return new ApiResponse(false, "you successfully placed the order");
+                } else {
+                    return new ApiResponse(false, "Address Not Found");
+                }
+            } else {
+                return new ApiResponse(true, "user not found");
+            }
         } else {
             return new ApiResponse(true, "user not found");
         }

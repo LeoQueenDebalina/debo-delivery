@@ -14,6 +14,7 @@ import java.util.List;
 public interface CheckOutRepository extends JpaRepository<Checkout, String> {
     @Query("select u from Checkout u where u.user = :n")
     public List<Checkout> findOrderByUser(@Param("n") User user);
+
     @Query("select case when count(u)>0 then true else false end from Checkout u where u.user=:n and u.checkoutId=:m")
-    public boolean orderedProductIsExist(@Param("n") User user,@Param("m") String checkoutId);
+    public boolean orderedProductIsExist(@Param("n") User user, @Param("m") String checkoutId);
 }

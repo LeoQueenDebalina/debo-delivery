@@ -13,7 +13,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="DeliveryAddress")
+@Table(name = "DeliveryAddress")
 @Builder
 public class DeliveryAddress {
     @Id
