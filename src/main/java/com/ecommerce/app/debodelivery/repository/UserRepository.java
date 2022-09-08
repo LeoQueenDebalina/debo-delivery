@@ -28,4 +28,8 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Modifying
     @Query("update User u set u.isDeleted = true, u.mobileNumber = concat(u.mobileNumber,'-deleted') where u.mobileNumber = :n")
     public Integer deleteAccount(@Param("n") String number);
+    @Transactional
+    @Modifying
+    @Query("update User u set u.isEmailVerified = true where u.mobileNumber = :n")
+    public Integer activateAccount(@Param("n") String number);
 }

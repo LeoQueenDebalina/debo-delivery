@@ -34,7 +34,7 @@ public class DeliveredAddressService {
                     data.getRoadName(),
                     data.getAddressType());
         } else {
-            throw new DataNotFoundException("address not found");
+            throw new DataNotFoundException("Address not found");
         }
     }
 
@@ -65,18 +65,6 @@ public class DeliveredAddressService {
         }
     }
 
-//    public ApiResponse deleteAddress(String phoneNumber) {
-//        if (userRepository.ifNumberIsExist(phoneNumber)) {
-//            if (deliveryAddressRepository.ifAddressAlreadyExist(userRepository.findByMobileNumber(phoneNumber))) {
-//                this.deliveryAddressRepository.deleteAddress(userRepository.findByMobileNumber(phoneNumber));
-//                return new ApiResponse(false, "Address deleted successfully");
-//            } else {
-//                return new ApiResponse(true, "Your address is not exist, Please add new address");
-//            }
-//        } else {
-//            return new ApiResponse(true, "User not found");
-//        }
-//    }
 
     public ApiResponse updateAddress(DeliveryAddressRequest deliveryAddress) {
         if (userRepository.ifNumberIsExist(deliveryAddress.getUserPhoneNumber())) {
@@ -128,7 +116,7 @@ public class DeliveredAddressService {
                 newData.setUser(oldData.getUser());
                 newData.setDate(oldData.getDate());
                 this.deliveryAddressRepository.save(newData);
-                return new ApiResponse(false, "information updated successfully");
+                return new ApiResponse(false, "Information updated successfully");
             } else {
                 return new ApiResponse(true, "Address not found");
             }

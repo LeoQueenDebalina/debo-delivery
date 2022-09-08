@@ -30,11 +30,11 @@ public interface ProductDataRepository extends JpaRepository<ProductData, String
 
     @Transactional
     @Modifying
-    @Query("update ProductData u set u.stock=u.stock-1 from where u.productId = :n")
+    @Query("update ProductData u set u.stock=u.stock-1 where u.productId = :n")
     public Integer removeStock(@Param("n") String productId);
 
     @Transactional
     @Modifying
-    @Query("update ProductData u set u.stock=u.stock+1 from where u.productId = :n")
+    @Query("update ProductData u set u.stock=u.stock+1 where u.productId = :n")
     public Integer addStock(@Param("n") String productId);
 }

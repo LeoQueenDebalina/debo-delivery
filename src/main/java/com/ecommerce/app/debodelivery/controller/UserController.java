@@ -5,6 +5,7 @@ import com.ecommerce.app.debodelivery.exception.DataNotFoundException;
 import com.ecommerce.app.debodelivery.model.AuthRequest;
 import com.ecommerce.app.debodelivery.model.UserRequest;
 import com.ecommerce.app.debodelivery.model.UserResponse;
+import com.ecommerce.app.debodelivery.repository.UserRepository;
 import com.ecommerce.app.debodelivery.service.UserService;
 import com.ecommerce.app.debodelivery.util.JwtUtil;
 import io.swagger.annotations.Api;
@@ -51,10 +52,21 @@ public class UserController {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequest.getUserName(), authRequest.getPassword())
             );
-        } catch (BadCredentialsException ex) {
-            throw new BadCredentialsException("inavalid username/password");
+        } catch (Exception ex) {
+            throw new BadCredentialsException("invalid username/password");
+        }
+        if (userService.isEmailVerified(authRequest.getUserName())){
+            throw new BadCredentialsException("Email not verified");
         }
         return jwtUtil.generateToken(authRequest.getUserName());
+    }
+    @PostMapping("/emailVerify/{mobileNumber}")
+    public ApiResponse emailVerify(@PathVariable String mobileNumber) throws BadCredentialsException {
+        return this.userService.emailVerify(mobileNumber);
+    }
+    @GetMapping("/registration/confirm")
+    public ApiResponse generateToken(@RequestParam("token") String token) {
+        return this.userService.confirmToken(token);
     }
 }
 

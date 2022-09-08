@@ -207,10 +207,10 @@ public class CheckoutService {
                     return new ApiResponse(false, "Address Not Found");
                 }
             } else {
-                return new ApiResponse(true, "user not found");
+                return new ApiResponse(true, "Cart item not found");
             }
         } else {
-            return new ApiResponse(true, "user not found");
+            return new ApiResponse(true, "User not found");
         }
     }
 }

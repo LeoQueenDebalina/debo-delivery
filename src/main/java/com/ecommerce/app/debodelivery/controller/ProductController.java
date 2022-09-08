@@ -7,8 +7,6 @@ import com.ecommerce.app.debodelivery.model.ProductDataResponse;
 import com.ecommerce.app.debodelivery.service.ProductService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -49,14 +47,17 @@ public class ProductController {
     public List<ProductDataResponse> getProductByMaxPrice(@PathVariable Integer maxPrices) throws DataNotFoundException {
         return this.productService.getProductByMaxPrice(maxPrices);
     }
+
     @GetMapping("/getProductByGivenRange/minRange/{minRange}/maxRange/{maxRange}")
-    public List<ProductDataResponse> getProductByGivenRange(@PathVariable Integer minRange,@PathVariable Integer maxRange) throws DataNotFoundException {
-        return this.productService.getProductByGivenRange(minRange,maxRange);
+    public List<ProductDataResponse> getProductByGivenRange(@PathVariable Integer minRange, @PathVariable Integer maxRange) throws DataNotFoundException {
+        return this.productService.getProductByGivenRange(minRange, maxRange);
     }
+
     @GetMapping("/productImageFindById/{imageId}")
     public ResponseEntity<?> imageFindById(@PathVariable String imageId) throws FileNotFoundException {
-       return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("image/png")).body(this.productService.imageData(imageId));
+        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("image/png")).body(this.productService.imageData(imageId));
     }
+
     @GetMapping("/getAllProductBySorting/{field}")
     public List<ProductDataResponse> findProductsWithSorting(@PathVariable String field) throws DataNotFoundException {
         return this.productService.findProductsWithSorting(field);

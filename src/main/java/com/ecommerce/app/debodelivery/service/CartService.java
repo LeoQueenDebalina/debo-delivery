@@ -38,7 +38,7 @@ public class CartService {
                             .build());
                     return new ApiResponse(false, "Added to cart");
                 } else {
-                    return new ApiResponse(true, "product is already added to cart");
+                    return new ApiResponse(true, "Product is already added to cart");
                 }
             } else {
                 return new ApiResponse(true, "Product not found");

@@ -11,7 +11,6 @@ public class UserRequest {
     private String userName;
     private String userEmail;
     private String password;
-    private String loginToken;
     private String address;
     private String mobileNumber;
 }

@@ -11,10 +11,10 @@ import com.ecommerce.app.debodelivery.repository.CategoryRepository;
 import com.ecommerce.app.debodelivery.repository.ProductDataRepository;
 import com.ecommerce.app.debodelivery.repository.ProductImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+
+
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -62,7 +62,7 @@ public class ProductService {
                     .productImage(new ProductImage(String.valueOf(imageUuid), f.getName(), extension, bytes))
                     .category(categoryRepository.findByCategoryName(productDataRequest.getCategoryName()))
                     .build());
-            return new ApiResponse(false, "product added successfully");
+            return new ApiResponse(false, "Product added successfully");
         } else {
             return new ApiResponse(false, productDataRequest.getCategoryName() + " This category not found");
         }

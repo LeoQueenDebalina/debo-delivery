@@ -30,8 +30,6 @@ public class User {
     @Column(name = "createdAt")
     @Temporal(TemporalType.DATE)
     private Date createdAt;
-    @Column(name = "loginToken")
-    private String loginToken;
     @Column(name = "type")
     private Type type;
     @Column(name = "address")

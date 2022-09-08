@@ -19,9 +19,9 @@ public class CategoryService {
         UUID uuid = UUID.randomUUID();
         if (!this.categoryRepository.findByCategory(categoryRequest.getCategoryName())) {
             this.categoryRepository.save(Category.builder().categoryId(String.valueOf(uuid)).categoryName(categoryRequest.getCategoryName()).build());
-            return new ApiResponse(false, "category add successful");
+            return new ApiResponse(false, "Category add successful");
         } else {
-            return new ApiResponse(true, "category already added");
+            return new ApiResponse(true, "Category already added");
         }
     }
 
@@ -46,12 +46,12 @@ public class CategoryService {
                         .categoryId(data.getCategoryId())
                         .categoryName(categoryUpdatedName)
                         .build());
-                return new ApiResponse(false, "category updated");
+                return new ApiResponse(false, "Category updated");
             } else {
-                return new ApiResponse(true, "category not found");
+                return new ApiResponse(true, "Category not found");
             }
         } else {
-            return new ApiResponse(true, "category name are same");
+            return new ApiResponse(true, "Category name are same");
         }
     }
 }
