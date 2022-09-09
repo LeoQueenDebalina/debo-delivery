@@ -1,9 +1,7 @@
 package com.ecommerce.app.debodelivery.model;
 
-import com.ecommerce.app.debodelivery.util.OrderStatus;
-import com.ecommerce.app.debodelivery.util.PaymentType;
-import com.ecommerce.app.debodelivery.entity.DeliveryAddress;
-import com.ecommerce.app.debodelivery.entity.ProductData;
+import com.ecommerce.app.debodelivery.helper.OrderStatus;
+import com.ecommerce.app.debodelivery.helper.PaymentType;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

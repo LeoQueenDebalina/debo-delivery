@@ -1,6 +1,7 @@
 package com.ecommerce.app.debodelivery.controller;
 
 import com.ecommerce.app.debodelivery.common.ApiResponse;
+import com.ecommerce.app.debodelivery.entity.ProductData;
 import com.ecommerce.app.debodelivery.exception.DataNotFoundException;
 import com.ecommerce.app.debodelivery.model.ProductDataRequest;
 import com.ecommerce.app.debodelivery.model.ProductDataResponse;
@@ -12,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
@@ -24,7 +26,7 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping("/addProduct")
-    public ApiResponse addProduct(@RequestBody ProductDataRequest productDataRequest) throws FileNotFoundException, IOException {
+    public ApiResponse addProduct(@Valid @RequestBody ProductDataRequest productDataRequest) throws FileNotFoundException, IOException {
         return this.productService.addProduct(productDataRequest);
     }
 

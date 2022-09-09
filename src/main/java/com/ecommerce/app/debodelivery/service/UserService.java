@@ -5,7 +5,7 @@ import com.ecommerce.app.debodelivery.entity.ConfirmationToken;
 import com.ecommerce.app.debodelivery.repository.ConfirmationTokenRepository;
 import com.ecommerce.app.debodelivery.util.EmailSender;
 import com.ecommerce.app.debodelivery.util.MessageBuilder;
-import com.ecommerce.app.debodelivery.util.Type;
+import com.ecommerce.app.debodelivery.helper.Type;
 import com.ecommerce.app.debodelivery.entity.User;
 import com.ecommerce.app.debodelivery.exception.DataNotFoundException;
 import com.ecommerce.app.debodelivery.model.UserRequest;

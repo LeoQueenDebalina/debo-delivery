@@ -8,6 +8,7 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -18,17 +19,17 @@ public class CheckoutController {
     private CheckoutService checkoutService;
 
     @PostMapping("/buyProduct")
-    public ApiResponse buyProduct(@RequestBody OrderedProductRequest orderedProductRequest) throws DataNotFoundException {
+    public ApiResponse buyProduct(@Valid @RequestBody OrderedProductRequest orderedProductRequest) throws DataNotFoundException {
         return this.checkoutService.buyProduct(orderedProductRequest);
     }
 
     @PostMapping("/orderProductFromCart")
-    public ApiResponse orderProductFromCart(@RequestBody CartProductOrderedRequest cartProductOrderedRequest) throws DataNotFoundException {
+    public ApiResponse orderProductFromCart(@Valid @RequestBody CartProductOrderedRequest cartProductOrderedRequest) throws DataNotFoundException {
         return this.checkoutService.orderProductFromCart(cartProductOrderedRequest);
     }
 
     @PostMapping("/OrderProductFeedBack")
-    public ApiResponse OrderProductFeedBack(@RequestBody OrderProductFeedBackRequest orderProductFeedBackRequest) throws DataNotFoundException {
+    public ApiResponse OrderProductFeedBack(@Valid @RequestBody OrderProductFeedBackRequest orderProductFeedBackRequest) throws DataNotFoundException {
         return this.checkoutService.OrderProductFeedBack(orderProductFeedBackRequest);
     }
 

@@ -1,4 +1,4 @@
-package com.ecommerce.app.debodelivery.beans;
+package com.ecommerce.app.debodelivery.object;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -15,6 +15,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1")
 @Api
@@ -27,12 +29,12 @@ public class UserController {
     private AuthenticationManager authenticationManager;
 
     @PostMapping("/addUser")
-    public ApiResponse addUser(@RequestBody UserRequest userRequest) {
+    public ApiResponse addUser(@Valid @RequestBody UserRequest userRequest) {
         return this.userService.addUser(userRequest);
     }
 
     @PutMapping("/updateUser")
-    public ApiResponse updateUser(@RequestBody UserRequest userRequest) {
+    public ApiResponse updateUser(@Valid @RequestBody UserRequest userRequest) {
         return this.userService.updateUserData(userRequest);
     }
 
@@ -47,7 +49,7 @@ public class UserController {
     }
 
     @PostMapping("/authenticate")
-    public String generateToken(@RequestBody AuthRequest authRequest) throws BadCredentialsException {
+    public String generateToken(@Valid @RequestBody AuthRequest authRequest) throws BadCredentialsException {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequest.getUserName(), authRequest.getPassword())

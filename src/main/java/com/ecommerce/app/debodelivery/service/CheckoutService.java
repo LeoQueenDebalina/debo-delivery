@@ -5,7 +5,7 @@ import com.ecommerce.app.debodelivery.entity.AddToCart;
 import com.ecommerce.app.debodelivery.entity.OrderCancelDetails;
 import com.ecommerce.app.debodelivery.entity.OrderFeedback;
 import com.ecommerce.app.debodelivery.model.*;
-import com.ecommerce.app.debodelivery.util.OrderStatus;
+import com.ecommerce.app.debodelivery.helper.OrderStatus;
 import com.ecommerce.app.debodelivery.entity.Checkout;
 import com.ecommerce.app.debodelivery.exception.DataNotFoundException;
 import com.ecommerce.app.debodelivery.repository.*;

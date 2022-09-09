@@ -9,6 +9,8 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1")
 @Api
@@ -22,12 +24,12 @@ public class DeliveryAddressController {
     }
 
     @PostMapping("/addAddress")
-    public ApiResponse addAddress(@RequestBody DeliveryAddressRequest deliveryAddressRequest) {
+    public ApiResponse addAddress(@Valid @RequestBody DeliveryAddressRequest deliveryAddressRequest) {
         return this.deliveredAddressService.addAddress(deliveryAddressRequest);
     }
 
     @PutMapping("/updateAddress")
-    public ApiResponse updateAddress(@RequestBody DeliveryAddressRequest deliveryAddressRequest) {
+    public ApiResponse updateAddress(@Valid @RequestBody DeliveryAddressRequest deliveryAddressRequest) {
         return this.deliveredAddressService.updateAddress(deliveryAddressRequest);
     }
 }
