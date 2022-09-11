@@ -55,7 +55,7 @@ public class CartService {
                     this.addToCartRepository.delete(addToCartRepository.selectByProductData(productDataRepository.findProductById(productId), userRepository.findByMobileNumber(userMobileNumber)));
                     return new ApiResponse(false, "Product remove from cart");
                 } else {
-                    return new ApiResponse(true, "product not added to cart");
+                    return new ApiResponse(true, "Product not added to cart");
                 }
             } else {
                 return new ApiResponse(true, "Product not found");

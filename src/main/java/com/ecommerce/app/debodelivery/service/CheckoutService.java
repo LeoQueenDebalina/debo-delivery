@@ -168,10 +168,10 @@ public class CheckoutService {
                     return new ApiResponse(true, "You have already cancelled the order");
                 }
             } else {
-                return new ApiResponse(true, "order item not found");
+                return new ApiResponse(true, "Order item not found");
             }
         } else {
-            return new ApiResponse(true, "user not found");
+            return new ApiResponse(true, "User not found");
         }
     }
 

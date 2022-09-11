@@ -71,39 +71,43 @@ public class UserService implements UserDetailsService {
 
     public ApiResponse updateUserData(UserRequest userRequest) {
         if (userRepository.ifNumberIsExist(userRequest.getMobileNumber()) && !userRepository.getUserIsDeletedByNumber(userRequest.getMobileNumber())) {
-            User newData = new User();
-            String id = this.userRepository.getUserIdByNumber(userRequest.getMobileNumber());
-            Optional<User> oldData = this.userRepository.findById(id);
-            newData.setUserId(id);
-            if (userRequest.getUserName() != "") {
-                newData.setUserName(userRequest.getUserName());
+            if (userRepository.findByMobileNumber(userRequest.getMobileNumber()).getIsEmailVerified()) {
+                User newData = new User();
+                String id = this.userRepository.getUserIdByNumber(userRequest.getMobileNumber());
+                Optional<User> oldData = this.userRepository.findById(id);
+                newData.setUserId(id);
+                if (userRequest.getUserName() != "") {
+                    newData.setUserName(userRequest.getUserName());
+                } else {
+                    newData.setUserName(oldData.get().getUserName());
+                }
+                if (userRequest.getUserEmail() != "") {
+                    newData.setUserEmail(userRequest.getUserEmail());
+                } else {
+                    newData.setUserEmail(oldData.get().getUserEmail());
+                }
+                newData.setMobileNumber(oldData.get().getMobileNumber());
+                if (userRequest.getPassword() != "") {
+                    newData.setPassword(userRequest.getPassword());
+                } else {
+                    newData.setPassword(oldData.get().getPassword());
+                }
+                newData.setCreatedAt(oldData.get().getCreatedAt());
+                newData.setType(oldData.get().getType());
+                if (userRequest.getAddress() != "") {
+                    newData.setAddress(userRequest.getAddress());
+                } else {
+                    newData.setAddress(oldData.get().getAddress());
+                }
+                newData.setIsEmailVerified(oldData.get().getIsEmailVerified());
+                newData.setIsDeleted(oldData.get().getIsDeleted());
+                this.userRepository.save(newData);
+                return new ApiResponse(false, "Information updated successfully");
             } else {
-                newData.setUserName(oldData.get().getUserName());
+                return new ApiResponse(true, "Email not verified");
             }
-            if (userRequest.getUserEmail() != "") {
-                newData.setUserEmail(userRequest.getUserEmail());
-            } else {
-                newData.setUserEmail(oldData.get().getUserEmail());
-            }
-            newData.setMobileNumber(oldData.get().getMobileNumber());
-            if (userRequest.getPassword() != "") {
-                newData.setPassword(userRequest.getPassword());
-            } else {
-                newData.setPassword(oldData.get().getPassword());
-            }
-            newData.setCreatedAt(oldData.get().getCreatedAt());
-            newData.setType(oldData.get().getType());
-            if (userRequest.getAddress() != "") {
-                newData.setAddress(userRequest.getAddress());
-            } else {
-                newData.setAddress(oldData.get().getAddress());
-            }
-            newData.setIsEmailVerified(oldData.get().getIsEmailVerified());
-            newData.setIsDeleted(oldData.get().getIsDeleted());
-            this.userRepository.save(newData);
-            return new ApiResponse(false, "Information updated successfully");
         } else {
-            return new ApiResponse(true, "Mobile number does not exist");
+            return new ApiResponse(true, "User not found");
         }
     }
 
