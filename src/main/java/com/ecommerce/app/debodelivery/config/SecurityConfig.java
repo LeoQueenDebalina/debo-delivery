@@ -43,18 +43,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests().antMatchers("/api/v1/authenticate",
-                        "/api/v1/emailVerify/**",
-                        "/api/v1/reg/**",
-                        "/api/v1/findByProductNameOrProductSellingPrice/productName/**",
-                        "/api/v1/registration/confirm**",
-                        "/v2/api-docs",
+        http.csrf().disable().authorizeRequests().antMatchers("/api/v*/authenticate",
+                        "/api/v*/emailVerify/**",
+                        "/api/v*/registration/confirm",
+                        "/api/v*/deleteUser/**/status/**",
+                        "/api/v*/addProduct",
+                        "/api/v*/getAllProduct",
+                        "/api/v*/getProductByName/**",
+                        "/api/v*/getProductByCategoryName/**",
+                        "/api/v*/getProductByMaxPrice/**",
+                        "/api/v*/getProductByGivenRange/startRange/**/maxRange/**",
+                        "/api/v*/productImageFindById/**",
+                        "/api/v*/getAllProductBySorting/**",
+                        "/api/v*/getAllCategory/**",
+                        "/api/v*/updateCategory/categoryOldName/**/categoryUpdatedName/**",
+                        "/api/v*/reg/**",
+                        "/api/v*/findByProductNameOrProductSellingPrice/productName/**",
+                        "/api/v*/registration/confirm**",
+                        "/v*/api-docs",
                         "/configuration/ui",
                         "/swagger-resources/**",
                         "/configuration/security",
                         "/swagger-ui.html",
                         "/webjars/**",
-                        "/api/v1/addUser")
+                        "/api/v*/addUser")
                 .permitAll().anyRequest().authenticated()
                 .and().exceptionHandling().and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);

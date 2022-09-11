@@ -26,7 +26,7 @@ public interface ProductDataRepository extends JpaRepository<ProductData, String
     public List<ProductData> findAllByMaxPrice(@Param("n") Integer maxPrice);
 
     @Query(value = "select * from product_data limit ?1, ?2", nativeQuery = true)
-    public List<ProductData> findAllByRange(Integer minRange, Integer maxRange);
+    public List<ProductData> findAllByRange(Integer startRange, Integer maxRange);
 
     @Transactional
     @Modifying

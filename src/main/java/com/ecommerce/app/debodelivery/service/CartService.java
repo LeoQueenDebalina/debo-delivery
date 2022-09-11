@@ -49,7 +49,6 @@ public class CartService {
     }
 
     public ApiResponse deleteProductFromCart(String userMobileNumber, String productId) {
-        UUID uuid = UUID.randomUUID();
         if (userRepository.ifNumberIsExist(userMobileNumber)) {
             if (productDataRepository.existsById(productId)) {
                 if (addToCartRepository.isExistCart(productDataRepository.findProductById(productId), userRepository.findByMobileNumber(userMobileNumber))) {

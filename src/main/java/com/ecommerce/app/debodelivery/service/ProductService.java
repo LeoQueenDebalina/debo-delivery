@@ -71,7 +71,17 @@ public class ProductService {
     public List<ProductDataResponse> getAllProduct() throws DataNotFoundException {
         List<ProductDataResponse> productDataResponse = new ArrayList<>();
         for (ProductData data : this.productDataRepository.findAll()) {
-            productDataResponse.add(new ProductDataResponse(data.getProductId(), data.getProductName(), data.getProductActualPrice(), data.getDiscountSellingPrice(), data.getProductSellingPrice(), data.getProductDescription(), data.getRating(), data.getStock(), data.getCategory().getCategoryName(), data.getCompanyName(), data.getProductImage().getImageId()));
+            productDataResponse.add(new ProductDataResponse(data.getProductId(),
+                    data.getProductName(),
+                    data.getProductActualPrice(),
+                    data.getDiscountSellingPrice(),
+                    data.getProductSellingPrice(),
+                    data.getProductDescription(),
+                    data.getRating(),
+                    data.getStock(),
+                    data.getCategory().getCategoryName(),
+                    data.getCompanyName(),
+                    data.getProductImage().getImageId()));
         }
         if (!productDataResponse.isEmpty()) {
             return productDataResponse;
@@ -83,7 +93,17 @@ public class ProductService {
     public List<ProductDataResponse> getProductByName(String name) throws DataNotFoundException {
         List<ProductDataResponse> productDataResponse = new ArrayList<>();
         for (ProductData data : this.productDataRepository.findAllByName(name)) {
-            productDataResponse.add(new ProductDataResponse(data.getProductId(), data.getProductName(), data.getProductActualPrice(), data.getDiscountSellingPrice(), data.getProductSellingPrice(), data.getProductDescription(), data.getRating(), data.getStock(), data.getCategory().getCategoryName(), data.getCompanyName(), data.getProductImage().getImageId()));
+            productDataResponse.add(new ProductDataResponse(data.getProductId(),
+                    data.getProductName(),
+                    data.getProductActualPrice(),
+                    data.getDiscountSellingPrice(),
+                    data.getProductSellingPrice(),
+                    data.getProductDescription(),
+                    data.getRating(),
+                    data.getStock(),
+                    data.getCategory().getCategoryName(),
+                    data.getCompanyName(),
+                    data.getProductImage().getImageId()));
         }
         if (!productDataResponse.isEmpty()) {
             return productDataResponse;
@@ -97,7 +117,17 @@ public class ProductService {
         Category category = this.categoryRepository.findByCategoryName(name);
         if (category != null) {
             for (ProductData data : this.productDataRepository.findAllByCategoryId(category)) {
-                productDataResponse.add(new ProductDataResponse(data.getProductId(), data.getProductName(), data.getProductActualPrice(), data.getDiscountSellingPrice(), data.getProductSellingPrice(), data.getProductDescription(), data.getRating(), data.getStock(), data.getCategory().getCategoryName(), data.getCompanyName(), data.getProductImage().getImageId()));
+                productDataResponse.add(new ProductDataResponse(data.getProductId(),
+                        data.getProductName(),
+                        data.getProductActualPrice(),
+                        data.getDiscountSellingPrice(),
+                        data.getProductSellingPrice(),
+                        data.getProductDescription(),
+                        data.getRating(),
+                        data.getStock(),
+                        data.getCategory().getCategoryName(),
+                        data.getCompanyName(),
+                        data.getProductImage().getImageId()));
             }
             if (!productDataResponse.isEmpty()) {
                 return productDataResponse;
@@ -112,7 +142,17 @@ public class ProductService {
     public List<ProductDataResponse> getProductByMaxPrice(Integer maxPrice) throws DataNotFoundException {
         List<ProductDataResponse> productDataResponse = new ArrayList<>();
         for (ProductData data : this.productDataRepository.findAllByMaxPrice(maxPrice)) {
-            productDataResponse.add(new ProductDataResponse(data.getProductId(), data.getProductName(), data.getProductActualPrice(), data.getDiscountSellingPrice(), data.getProductSellingPrice(), data.getProductDescription(), data.getRating(), data.getStock(), data.getCategory().getCategoryName(), data.getCompanyName(), data.getProductImage().getImageId()));
+            productDataResponse.add(new ProductDataResponse(data.getProductId(),
+                    data.getProductName(),
+                    data.getProductActualPrice(),
+                    data.getDiscountSellingPrice(),
+                    data.getProductSellingPrice(),
+                    data.getProductDescription(),
+                    data.getRating(),
+                    data.getStock(),
+                    data.getCategory().getCategoryName(),
+                    data.getCompanyName(),
+                    data.getProductImage().getImageId()));
         }
         if (!productDataResponse.isEmpty()) {
             return productDataResponse;
@@ -121,10 +161,20 @@ public class ProductService {
         }
     }
 
-    public List<ProductDataResponse> getProductByGivenRange(Integer minRange, Integer maxRange) throws DataNotFoundException {
+    public List<ProductDataResponse> getProductByGivenRange(Integer startRange, Integer maxRange) throws DataNotFoundException {
         List<ProductDataResponse> productDataResponse = new ArrayList<>();
-        for (ProductData data : this.productDataRepository.findAllByRange(minRange, maxRange)) {
-            productDataResponse.add(new ProductDataResponse(data.getProductId(), data.getProductName(), data.getProductActualPrice(), data.getDiscountSellingPrice(), data.getProductSellingPrice(), data.getProductDescription(), data.getRating(), data.getStock(), data.getCategory().getCategoryName(), data.getCompanyName(), data.getProductImage().getImageId()));
+        for (ProductData data : this.productDataRepository.findAllByRange(startRange, maxRange)) {
+            productDataResponse.add(new ProductDataResponse(data.getProductId(),
+                    data.getProductName(),
+                    data.getProductActualPrice(),
+                    data.getDiscountSellingPrice(),
+                    data.getProductSellingPrice(),
+                    data.getProductDescription(),
+                    data.getRating(),
+                    data.getStock(),
+                    data.getCategory().getCategoryName(),
+                    data.getCompanyName(),
+                    data.getProductImage().getImageId()));
         }
         if (!productDataResponse.isEmpty()) {
             return productDataResponse;
@@ -145,7 +195,17 @@ public class ProductService {
     public List<ProductDataResponse> findProductsWithSorting(String field) throws DataNotFoundException {
         List<ProductDataResponse> productDataResponse = new ArrayList<>();
         for (ProductData data : this.productDataRepository.findAll(Sort.by(Sort.Direction.ASC, field))) {
-            productDataResponse.add(new ProductDataResponse(data.getProductId(), data.getProductName(), data.getProductActualPrice(), data.getDiscountSellingPrice(), data.getProductSellingPrice(), data.getProductDescription(), data.getRating(), data.getStock(), data.getCategory().getCategoryName(), data.getCompanyName(), data.getProductImage().getImageId()));
+            productDataResponse.add(new ProductDataResponse(data.getProductId(),
+                    data.getProductName(),
+                    data.getProductActualPrice(),
+                    data.getDiscountSellingPrice(),
+                    data.getProductSellingPrice(),
+                    data.getProductDescription(),
+                    data.getRating(),
+                    data.getStock(),
+                    data.getCategory().getCategoryName(),
+                    data.getCompanyName(),
+                    data.getProductImage().getImageId()));
         }
         if (!productDataResponse.isEmpty()) {
             return productDataResponse;

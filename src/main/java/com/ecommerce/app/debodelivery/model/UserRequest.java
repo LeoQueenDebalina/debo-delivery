@@ -13,16 +13,16 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserRequest {
-    @Pattern(regexp = "/^[A-Za-z ]+$/", message = "should contain character and space only")
+    @Pattern(regexp = "[A-Za-z ]+", message = "should contain character and space only")
     @NotBlank
     private String userName;
     @Email
     @NotBlank
     private String userEmail;
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$\"", message = "Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$", message = "Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character")
     @NotBlank
     private String password;
-    @Pattern(regexp = "/^[a-z .]+$/i", message = "should contain character, dot and space only")
+    @Pattern(regexp = "[A-Za-z .,]+$", message = "should contain character, dot and space only")
     @NotBlank
     private String address;
     @Pattern(regexp = "[\\d]+" ,message = "Should contain digits only")

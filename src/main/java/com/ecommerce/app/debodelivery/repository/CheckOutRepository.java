@@ -1,6 +1,5 @@
 package com.ecommerce.app.debodelivery.repository;
 
-import com.ecommerce.app.debodelivery.entity.Category;
 import com.ecommerce.app.debodelivery.entity.Checkout;
 import com.ecommerce.app.debodelivery.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

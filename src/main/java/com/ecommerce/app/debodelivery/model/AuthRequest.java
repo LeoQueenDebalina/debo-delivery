@@ -16,7 +16,7 @@ public class AuthRequest {
     @Size(min = 10, max = 10)
     @NotBlank
     private String userName;
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$\"" ,message = "Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$" ,message = "Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character")
     @NotBlank
     private String password;
 }

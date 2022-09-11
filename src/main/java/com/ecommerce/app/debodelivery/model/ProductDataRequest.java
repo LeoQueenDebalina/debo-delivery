@@ -14,19 +14,15 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 @Table(name = "ProductData")
 public class ProductDataRequest {
-    @Pattern(regexp = "[\\d]")
+    @NotBlank@Pattern(regexp = "[a-z\\d .,]+", message = "should contain character, dot, number, comma and space only")
     @NotBlank
     private String productName;
-    @Pattern(regexp = "[\\d]+" ,message = "Should contain digits only")
     @NotBlank
     private Integer productActualPrice;
-    @Pattern(regexp = "[\\d]+" ,message = "Should contain digits only")
     @NotBlank
     private Integer discountSellingPrice;
-
-    @NotBlank@Pattern(regexp = "/^[a-z .,]+$/i", message = "should contain character, dot, comma and space only")
+    @NotBlank
     private String productDescription;
-    @Pattern(regexp = "[\\d.]+" ,message = "Should contain digits only")
     @NotBlank
     private Float rating;
     @Pattern(regexp = "[\\d]+")

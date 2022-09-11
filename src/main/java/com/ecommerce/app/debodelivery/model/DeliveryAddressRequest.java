@@ -18,26 +18,25 @@ public class DeliveryAddressRequest {
     @Size(min = 10, max = 10)
     @NotBlank
     private String userPhoneNumber;
-    @Pattern(regexp = "/^[a-z ]+$/i", message = "should contain character and space only")
+    @Pattern(regexp = "[A-Za-z ]+", message = "should contain character and space only")
     private String fullName;
     @Pattern(regexp = "[\\d]+" ,message = "Should contain digits only")
     @Size(min = 10, max = 10)
     @NotBlank
     private String phoneNumber;
-    @Pattern(regexp = "[\\d]+" ,message = "Should contain digits only")
     @Size(min = 6, max = 6)
     @NotBlank
     private Integer pinCode;
-    @Pattern(regexp = "/^[a-z .]+$/i", message = "should contain character, dot and space only")
+    @Pattern(regexp = "[A-Za-z .]+", message = "should contain character, dot and space only")
     @NotBlank
     private String state;
-    @Pattern(regexp = "/^[a-z .]+$/i", message = "should contain character, dot and space only")
+    @Pattern(regexp = "[A-Za-z .]+", message = "should contain character, dot and space only")
     @NotBlank
     private String city;
-    @Pattern(regexp = "/^[a-z\\d .]+$/i", message = "should contain character, dot and space only")
+    @Pattern(regexp = "[A-Za-z\\d .]+", message = "should contain character, dot and space only")
     @NotBlank
     private String houseNo;
-    @Pattern(regexp = "/^[a-z .]+$/i", message = "should contain character, dot and space only")
+    @Pattern(regexp = "[A-Za-z\\d .]+", message = "should contain character, dot and space only")
     @NotBlank
     private String roadName;
     @NotNull

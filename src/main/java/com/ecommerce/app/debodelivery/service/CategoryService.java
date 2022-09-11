@@ -32,7 +32,7 @@ public class CategoryService {
             list.add(data.getCategoryName());
         }
         if (list.isEmpty()) {
-            throw new DataNotFoundException("No cateory found");
+            throw new DataNotFoundException("No category found");
         } else {
             return list;
         }

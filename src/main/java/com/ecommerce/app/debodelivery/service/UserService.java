@@ -136,7 +136,7 @@ public class UserService implements UserDetailsService {
             String link = "http://localhost:4040/api/v1/registration/confirm?token=" + token;
             this.confirmationTokenRepository.save(ConfirmationToken.builder().tokenId(token).token(token).createdAt(LocalDateTime.now()).expiresAt(LocalDateTime.now().plusMinutes(15)).confirmedAt(null).user(userRepository.findByMobileNumber(mobileNumber)).build());
             this.emailService.send(userRepository.findByMobileNumber(mobileNumber).getUserEmail(), messageBuilder.buildEmail(userRepository.findByMobileNumber(mobileNumber).getUserName(), link),"Confirm your email");
-            return new ApiResponse(false, "Confirmation send Successfully in your email Please verify Your email");
+            return new ApiResponse(false, "Confirmation link send Successfully in your email Please verify Your email");
         } else {
             return new ApiResponse(true, "User Not Found");
         }
@@ -145,6 +145,9 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = this.userRepository.findByMobileNumber(username);
+        if (user != null){
+            throw new UsernameNotFoundException("User not found");
+        }
         return new org.springframework.security.core.userdetails.User(user.getMobileNumber(), user.getPassword(), new ArrayList<>());
     }
 
@@ -166,7 +169,8 @@ public class UserService implements UserDetailsService {
         confirmationTokenRepository.updateConfirmedAt(
                 token, LocalDateTime.now());
         userRepository.activateAccount(confirmationToken.getUser().getMobileNumber());
-        this.emailService.send(confirmationToken.getUser().getUserEmail(), messageBuilder.confirmationEmail(confirmationToken.getUser().getUserName()),"Verified email");
+        this.emailService.send(confirmationToken.getUser().getUserEmail(),
+                messageBuilder.confirmationEmail(confirmationToken.getUser().getUserName()),"Verified email");
         return new ApiResponse(false, "Confirmed");
     }
     public Boolean isEmailVerified(String mobileNumber){

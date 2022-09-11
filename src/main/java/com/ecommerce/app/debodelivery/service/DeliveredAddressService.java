@@ -24,17 +24,21 @@ public class DeliveredAddressService {
     public DeliveryAddressResponse getDeliveryAddressByUserPhoneNumber(String userPhone) throws DataNotFoundException {
         if (userRepository.ifNumberIsExist(userPhone)) {
             DeliveryAddress data = this.deliveryAddressRepository.findAddress(userRepository.findByMobileNumber(userPhone));
-            return new DeliveryAddressResponse(data.getDeliveredAddressId(),
-                    data.getFullName(),
-                    data.getPhoneNumber(),
-                    data.getPinCode(),
-                    data.getState(),
-                    data.getCity(),
-                    data.getHouseNo(),
-                    data.getRoadName(),
-                    data.getAddressType());
+            if (data != null) {
+                return new DeliveryAddressResponse(data.getDeliveredAddressId(),
+                        data.getFullName(),
+                        data.getPhoneNumber(),
+                        data.getPinCode(),
+                        data.getState(),
+                        data.getCity(),
+                        data.getHouseNo(),
+                        data.getRoadName(),
+                        data.getAddressType());
+            } else {
+                throw new DataNotFoundException("Address not found");
+            }
         } else {
-            throw new DataNotFoundException("Address not found");
+            throw new DataNotFoundException("User not found");
         }
     }
 
@@ -58,7 +62,7 @@ public class DeliveredAddressService {
                         .build());
                 return new ApiResponse(false, "Address added successfully");
             } else {
-                return new ApiResponse(true, "Your address is already exist,Please delete the current address and Add new address");
+                return new ApiResponse(true, "Your address is already exist");
             }
         } else {
             return new ApiResponse(true, "User not found");

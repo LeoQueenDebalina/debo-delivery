@@ -31,7 +31,7 @@ public class CheckoutService {
     @Autowired
     private OrderFeedbackRepository orderFeedbackRepository;
 
-    public ApiResponse buyProduct(OrderedProductRequest orderedProductRequest) throws DataNotFoundException {
+    public ApiResponse buyProduct(OrderedProductRequest orderedProductRequest) {
         UUID uuid = UUID.randomUUID();
         if (userRepository.ifNumberIsExist(orderedProductRequest.getUserMobileNumber())) {
             if (productDataRepository.existsById(orderedProductRequest.getProductId())) {
@@ -202,7 +202,7 @@ public class CheckoutService {
                             this.productDataRepository.removeStock(data.getProductData().getProductId());
                         }
                     }
-                    return new ApiResponse(false, "you successfully placed the order");
+                    return new ApiResponse(false, "You successfully placed the order");
                 } else {
                     return new ApiResponse(false, "Address Not Found");
                 }

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
@@ -12,7 +11,7 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CategoryRequest {
-    @Pattern(regexp = "/^[a-z ]+$/i", message = "should contain character and space only")
+    @Pattern(regexp = "[a-z ]+", message = "should contain character and space only")
     @NotBlank
     private String categoryName;
 }

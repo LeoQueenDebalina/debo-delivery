@@ -50,9 +50,9 @@ public class ProductController {
         return this.productService.getProductByMaxPrice(maxPrices);
     }
 
-    @GetMapping("/getProductByGivenRange/minRange/{minRange}/maxRange/{maxRange}")
-    public List<ProductDataResponse> getProductByGivenRange(@PathVariable Integer minRange, @PathVariable Integer maxRange) throws DataNotFoundException {
-        return this.productService.getProductByGivenRange(minRange, maxRange);
+    @GetMapping("/getProductByGivenRange/startRange/{startRange}/maxRange/{maxRange}")
+    public List<ProductDataResponse> getProductByGivenRange(@PathVariable Integer startRange, @PathVariable Integer maxRange) throws DataNotFoundException {
+        return this.productService.getProductByGivenRange(startRange, maxRange);
     }
 
     @GetMapping("/productImageFindById/{imageId}")
