@@ -12,23 +12,16 @@ import javax.transaction.Transactional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
-    @Query("select case when count(u)>0 then true else false end from User u where u.mobileNumber = :n")
-    public boolean ifNumberIsExist(@Param("n") String number);
+    public boolean existsUserByMobileNumber(String mobileNumber);
 
-    @Query("select u.userId from User u where u.mobileNumber = :n")
-    public String getUserIdByNumber(@Param("n") String number);
-
-    @Query("select u.isDeleted from User u where u.mobileNumber = :n")
-    public Boolean getUserIsDeletedByNumber(@Param("n") String number);
-
-    public User findByMobileNumber(@Param("n") String number);
+    public User findByMobileNumber(String mobileNumber);
 
     @Transactional
     @Modifying
     @Query("update User u set u.isDeleted = true, u.mobileNumber = concat(u.mobileNumber,'-deleted') where u.mobileNumber = :n")
-    public Integer deleteAccount(@Param("n") String number);
+    public Integer deleteAccount(@Param("n") String mobileNumber);
     @Transactional
     @Modifying
     @Query("update User u set u.isEmailVerified = true where u.mobileNumber = :n")
-    public Integer activateAccount(@Param("n") String number);
+    public Integer activateAccount(@Param("n") String mobileNumber);
 }

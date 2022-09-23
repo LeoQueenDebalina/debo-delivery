@@ -25,7 +25,7 @@ public class DeliveryAddressRequest {
     @NotBlank
     private String phoneNumber;
     @Size(min = 6, max = 6)
-    @NotBlank
+    @NotNull
     private Integer pinCode;
     @Pattern(regexp = "[A-Za-z .]+", message = "should contain character, dot and space only")
     @NotBlank

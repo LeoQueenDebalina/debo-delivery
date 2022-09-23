@@ -31,6 +31,7 @@ public class User {
     @Temporal(TemporalType.DATE)
     private Date createdAt;
     @Column(name = "type")
+    @Enumerated(EnumType.STRING)
     private Type type;
     @Column(name = "address")
     private String address;

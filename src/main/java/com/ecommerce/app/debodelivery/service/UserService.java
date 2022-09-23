@@ -12,6 +12,7 @@ import com.ecommerce.app.debodelivery.model.UserRequest;
 import com.ecommerce.app.debodelivery.model.UserResponse;
 import com.ecommerce.app.debodelivery.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -34,20 +35,21 @@ public class UserService implements UserDetailsService {
     private EmailSender emailService;
     @Autowired
     private MessageBuilder messageBuilder;
+    @Value("${server.port}")
+    private String port;
 
 
-    public ApiResponse addUser(UserRequest userRequest) {
-        UUID uuid = UUID.randomUUID();
+    public ApiResponse addUser(UserRequest userRequest, Type type) {
         String token = UUID.randomUUID().toString();
-        String link = "http://localhost:4040/api/v1/registration/confirm?token=" + token;
-        if (!userRepository.ifNumberIsExist(userRequest.getMobileNumber())) {
+        String link = "http://localhost:" + port + "/api/v1/registration/confirm?token=" + token;
+        if (!userRepository.existsUserByMobileNumber(userRequest.getMobileNumber())) {
             this.userRepository.save(User.builder()
-                    .userId(String.valueOf(uuid))
+                    .userId(UUID.randomUUID().toString())
                     .userName(userRequest.getUserName())
                     .userEmail(userRequest.getUserEmail())
                     .password(bCryptPasswordEncoder.encode(userRequest.getPassword()))
                     .createdAt(new Date())
-                    .type(Type.USER)
+                    .type(type)
                     .address(userRequest.getAddress())
                     .isEmailVerified(false)
                     .mobileNumber(userRequest.getMobileNumber())
@@ -70,10 +72,10 @@ public class UserService implements UserDetailsService {
     }
 
     public ApiResponse updateUserData(UserRequest userRequest) {
-        if (userRepository.ifNumberIsExist(userRequest.getMobileNumber()) && !userRepository.getUserIsDeletedByNumber(userRequest.getMobileNumber())) {
+        if (userRepository.existsUserByMobileNumber(userRequest.getMobileNumber()) && !userRepository.findByMobileNumber(userRequest.getMobileNumber()).getIsDeleted()) {
             if (userRepository.findByMobileNumber(userRequest.getMobileNumber()).getIsEmailVerified()) {
                 User newData = new User();
-                String id = this.userRepository.getUserIdByNumber(userRequest.getMobileNumber());
+                String id = this.userRepository.findByMobileNumber(userRequest.getMobileNumber()).getUserId();
                 Optional<User> oldData = this.userRepository.findById(id);
                 newData.setUserId(id);
                 if (userRequest.getUserName() != "") {
@@ -112,7 +114,7 @@ public class UserService implements UserDetailsService {
     }
 
     public ApiResponse deleteUser(String mobileNumber, Boolean cStatus) {
-        if (userRepository.ifNumberIsExist(mobileNumber) && cStatus && !userRepository.getUserIsDeletedByNumber(mobileNumber)) {
+        if (userRepository.existsUserByMobileNumber(mobileNumber) && cStatus && !userRepository.findByMobileNumber(mobileNumber).getIsDeleted()) {
             this.userRepository.deleteAccount(mobileNumber);
             return new ApiResponse(false, "Your account is successfully deleted");
         } else {
@@ -121,9 +123,8 @@ public class UserService implements UserDetailsService {
     }
 
     public UserResponse getUserByMobileNumber(String mobileNumber) throws DataNotFoundException {
-        if (userRepository.ifNumberIsExist(mobileNumber) && !userRepository.getUserIsDeletedByNumber(mobileNumber)) {
-            String id = this.userRepository.getUserIdByNumber(mobileNumber);
-            Optional<User> data = this.userRepository.findById(id);
+        if (userRepository.existsUserByMobileNumber(mobileNumber) && !userRepository.findByMobileNumber(mobileNumber).getIsDeleted()) {
+            Optional<User> data = this.userRepository.findById(userRepository.findByMobileNumber(mobileNumber).getUserId());
             return new UserResponse(
                     data.get().getUserName(),
                     data.get().getUserEmail(),
@@ -135,11 +136,11 @@ public class UserService implements UserDetailsService {
     }
 
     public ApiResponse emailVerify(String mobileNumber) {
-        if (userRepository.ifNumberIsExist(mobileNumber)) {
+        if (userRepository.existsUserByMobileNumber(mobileNumber)) {
             String token = UUID.randomUUID().toString();
-            String link = "http://localhost:4040/api/v1/registration/confirm?token=" + token;
+            String link = "http://localhost:" + port + "/api/v1/registration/confirm?token=" + token;
             this.confirmationTokenRepository.save(ConfirmationToken.builder().tokenId(token).token(token).createdAt(LocalDateTime.now()).expiresAt(LocalDateTime.now().plusMinutes(15)).confirmedAt(null).user(userRepository.findByMobileNumber(mobileNumber)).build());
-            this.emailService.send(userRepository.findByMobileNumber(mobileNumber).getUserEmail(), messageBuilder.buildEmail(userRepository.findByMobileNumber(mobileNumber).getUserName(), link),"Confirm your email");
+            this.emailService.send(userRepository.findByMobileNumber(mobileNumber).getUserEmail(), messageBuilder.buildEmail(userRepository.findByMobileNumber(mobileNumber).getUserName(), link), "Confirm your email");
             return new ApiResponse(false, "Confirmation link send Successfully in your email Please verify Your email");
         } else {
             return new ApiResponse(true, "User Not Found");
@@ -149,7 +150,7 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = this.userRepository.findByMobileNumber(username);
-        if (user != null){
+        if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
         return new org.springframework.security.core.userdetails.User(user.getMobileNumber(), user.getPassword(), new ArrayList<>());
@@ -174,10 +175,11 @@ public class UserService implements UserDetailsService {
                 token, LocalDateTime.now());
         userRepository.activateAccount(confirmationToken.getUser().getMobileNumber());
         this.emailService.send(confirmationToken.getUser().getUserEmail(),
-                messageBuilder.confirmationEmail(confirmationToken.getUser().getUserName()),"Verified email");
+                messageBuilder.confirmationEmail(confirmationToken.getUser().getUserName()), "Verified email");
         return new ApiResponse(false, "Confirmed");
     }
-    public Boolean isEmailVerified(String mobileNumber){
+
+    public Boolean isEmailVerified(String mobileNumber) {
         return !this.userRepository.findByMobileNumber(mobileNumber).getIsEmailVerified();
     }
 }

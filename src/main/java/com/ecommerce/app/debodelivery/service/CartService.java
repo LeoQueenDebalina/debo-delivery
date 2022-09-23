@@ -27,12 +27,12 @@ public class CartService {
 
     public ApiResponse addProductToCart(String userMobileNumber, String productId) {
         UUID uuid = UUID.randomUUID();
-        if (userRepository.ifNumberIsExist(userMobileNumber)) {
+        if (userRepository.existsUserByMobileNumber(userMobileNumber)) {
             if (productDataRepository.existsById(productId)) {
-                if (!addToCartRepository.isExistCart(productDataRepository.findProductById(productId), userRepository.findByMobileNumber(userMobileNumber))) {
+                if (!addToCartRepository.existsAddToCartByProductDataAndUser(productDataRepository.findByProductId(productId), userRepository.findByMobileNumber(userMobileNumber))) {
                     this.addToCartRepository.save(AddToCart.builder()
                             .cartId(String.valueOf(uuid))
-                            .productData(productDataRepository.findProductById(productId))
+                            .productData(productDataRepository.findByProductId(productId))
                             .user(userRepository.findByMobileNumber(userMobileNumber))
                             .addedDate(new Date())
                             .build());
@@ -49,10 +49,10 @@ public class CartService {
     }
 
     public ApiResponse deleteProductFromCart(String userMobileNumber, String productId) {
-        if (userRepository.ifNumberIsExist(userMobileNumber)) {
+        if (userRepository.existsUserByMobileNumber(userMobileNumber)) {
             if (productDataRepository.existsById(productId)) {
-                if (addToCartRepository.isExistCart(productDataRepository.findProductById(productId), userRepository.findByMobileNumber(userMobileNumber))) {
-                    this.addToCartRepository.delete(addToCartRepository.selectByProductData(productDataRepository.findProductById(productId), userRepository.findByMobileNumber(userMobileNumber)));
+                if (addToCartRepository.existsAddToCartByProductDataAndUser(productDataRepository.findByProductId(productId), userRepository.findByMobileNumber(userMobileNumber))) {
+                    this.addToCartRepository.delete(addToCartRepository.findByProductDataAndUser(productDataRepository.findByProductId(productId), userRepository.findByMobileNumber(userMobileNumber)));
                     return new ApiResponse(false, "Product remove from cart");
                 } else {
                     return new ApiResponse(true, "Product not added to cart");
@@ -65,9 +65,9 @@ public class CartService {
         }
     }
     public List<ViewCartResponse> viewCart(String userMobileNumber) throws DataNotFoundException{
-        if (userRepository.ifNumberIsExist(userMobileNumber)) {
+        if (userRepository.existsUserByMobileNumber(userMobileNumber)) {
             List<ViewCartResponse> rData= new ArrayList<>();
-            for (AddToCart data : this.addToCartRepository.selectAllCartDataByUser(userRepository.findByMobileNumber(userMobileNumber))){
+            for (AddToCart data : this.addToCartRepository.findByUser(userRepository.findByMobileNumber(userMobileNumber))){
                 rData.add(new ViewCartResponse(
                         data.getProductData().getProductId(),
                         data.getProductData().getProductName(),
@@ -86,8 +86,8 @@ public class CartService {
         Integer productActualPrice=0;
         Integer discountSellingPrice=0;
         Integer productSellingPrice=0;
-        if (userRepository.ifNumberIsExist(userPhoneNumber)) {
-            for (AddToCart data : this.addToCartRepository.selectAllCartDataByUser(userRepository.findByMobileNumber(userPhoneNumber))){
+        if (userRepository.existsUserByMobileNumber(userPhoneNumber)) {
+            for (AddToCart data : this.addToCartRepository.findByUser(userRepository.findByMobileNumber(userPhoneNumber))){
                 productActualPrice+= data.getProductData().getProductActualPrice();
                 discountSellingPrice+= data.getProductData().getDiscountSellingPrice();
                 productSellingPrice+= data.getProductData().getProductSellingPrice();

@@ -13,20 +13,13 @@ import java.util.List;
 
 @Repository
 public interface ProductDataRepository extends JpaRepository<ProductData, String> {
-    @Query("select u from ProductData u where u.productName like %:n%")
-    public List<ProductData> findAllByName(@Param("n") String name);
+    public List<ProductData> findByProductNameContaining(String productName);
 
-    @Query("select u from ProductData u where u.category = :n")
-    public List<ProductData> findAllByCategoryId(@Param("n") Category category);
+    public List<ProductData> findByCategory(Category category);
 
-    @Query("select u from ProductData u where u.productId = :n")
-    public ProductData findProductById(@Param("n") String productId);
+    public ProductData findByProductId(String productId);
 
-    @Query("select u from ProductData u where u.productSellingPrice < :n")
-    public List<ProductData> findAllByMaxPrice(@Param("n") Integer maxPrice);
-
-    @Query(value = "select * from product_data limit ?1, ?2", nativeQuery = true)
-    public List<ProductData> findAllByRange(Integer startRange, Integer maxRange);
+    public List<ProductData> findByProductSellingPriceLessThanEqual(Integer productSellingPrice);
 
     @Transactional
     @Modifying

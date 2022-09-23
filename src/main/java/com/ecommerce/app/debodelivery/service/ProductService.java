@@ -5,6 +5,7 @@ import com.ecommerce.app.debodelivery.entity.Category;
 import com.ecommerce.app.debodelivery.entity.ProductData;
 import com.ecommerce.app.debodelivery.entity.ProductImage;
 import com.ecommerce.app.debodelivery.exception.DataNotFoundException;
+import com.ecommerce.app.debodelivery.model.PageOfProductDataResponse;
 import com.ecommerce.app.debodelivery.model.ProductDataRequest;
 import com.ecommerce.app.debodelivery.model.ProductDataResponse;
 import com.ecommerce.app.debodelivery.repository.CategoryRepository;
@@ -13,6 +14,8 @@ import com.ecommerce.app.debodelivery.repository.ProductImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import org.springframework.stereotype.Service;
@@ -22,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -33,9 +37,7 @@ public class ProductService {
     private ProductImageRepository productImageRepository;
 
     public ApiResponse addProduct(ProductDataRequest productDataRequest) throws FileNotFoundException, IOException {
-        UUID uuid = UUID.randomUUID();
-        UUID imageUuid = UUID.randomUUID();
-        if (this.categoryRepository.findByCategory(productDataRequest.getCategoryName())) {
+        if (this.categoryRepository.existsCategoryByCategoryNameContaining(productDataRequest.getCategoryName())) {
             File f = new File(productDataRequest.getProductImageUrl());
             byte[] bytes;
             String extension = "";
@@ -49,7 +51,7 @@ public class ProductService {
                 throw new FileNotFoundException("File Not Found");
             }
             this.productDataRepository.save(ProductData.builder()
-                    .productId(String.valueOf(uuid))
+                    .productId(UUID.randomUUID().toString())
                     .productName(productDataRequest.getProductName())
                     .productActualPrice(productDataRequest.getProductActualPrice())
                     .discountSellingPrice(productDataRequest.getDiscountSellingPrice())
@@ -59,8 +61,8 @@ public class ProductService {
                     .stock(productDataRequest.getStock())
                     .rating(productDataRequest.getRating())
                     .companyName(productDataRequest.getCompanyName())
-                    .productImage(new ProductImage(String.valueOf(imageUuid), f.getName(), extension, bytes))
-                    .category(categoryRepository.findByCategoryName(productDataRequest.getCategoryName()))
+                    .productImage(new ProductImage(UUID.randomUUID().toString(), f.getName(), extension, bytes))
+                    .category(categoryRepository.findByCategoryNameContaining(productDataRequest.getCategoryName()))
                     .build());
             return new ApiResponse(false, "Product added successfully");
         } else {
@@ -92,7 +94,7 @@ public class ProductService {
 
     public List<ProductDataResponse> getProductByName(String name) throws DataNotFoundException {
         List<ProductDataResponse> productDataResponse = new ArrayList<>();
-        for (ProductData data : this.productDataRepository.findAllByName(name)) {
+        for (ProductData data : this.productDataRepository.findByProductNameContaining(name)) {
             productDataResponse.add(new ProductDataResponse(data.getProductId(),
                     data.getProductName(),
                     data.getProductActualPrice(),
@@ -114,9 +116,9 @@ public class ProductService {
 
     public List<ProductDataResponse> getProductByCategoryName(String name) throws DataNotFoundException {
         List<ProductDataResponse> productDataResponse = new ArrayList<>();
-        Category category = this.categoryRepository.findByCategoryName(name);
+        Category category = this.categoryRepository.findByCategoryNameContaining(name);
         if (category != null) {
-            for (ProductData data : this.productDataRepository.findAllByCategoryId(category)) {
+            for (ProductData data : this.productDataRepository.findByCategory(category)) {
                 productDataResponse.add(new ProductDataResponse(data.getProductId(),
                         data.getProductName(),
                         data.getProductActualPrice(),
@@ -141,7 +143,7 @@ public class ProductService {
 
     public List<ProductDataResponse> getProductByMaxPrice(Integer maxPrice) throws DataNotFoundException {
         List<ProductDataResponse> productDataResponse = new ArrayList<>();
-        for (ProductData data : this.productDataRepository.findAllByMaxPrice(maxPrice)) {
+        for (ProductData data : this.productDataRepository.findByProductSellingPriceLessThanEqual(maxPrice)) {
             productDataResponse.add(new ProductDataResponse(data.getProductId(),
                     data.getProductName(),
                     data.getProductActualPrice(),
@@ -161,25 +163,24 @@ public class ProductService {
         }
     }
 
-    public List<ProductDataResponse> getProductByGivenRange(Integer startRange, Integer maxRange) throws DataNotFoundException {
-        List<ProductDataResponse> productDataResponse = new ArrayList<>();
-        for (ProductData data : this.productDataRepository.findAllByRange(startRange, maxRange)) {
-            productDataResponse.add(new ProductDataResponse(data.getProductId(),
-                    data.getProductName(),
-                    data.getProductActualPrice(),
-                    data.getDiscountSellingPrice(),
-                    data.getProductSellingPrice(),
-                    data.getProductDescription(),
-                    data.getRating(),
-                    data.getStock(),
-                    data.getCategory().getCategoryName(),
-                    data.getCompanyName(),
-                    data.getProductImage().getImageId()));
-        }
-        if (!productDataResponse.isEmpty()) {
-            return productDataResponse;
-        } else {
+    public PageOfProductDataResponse getProductByGivenRange(Integer page, Integer size) throws DataNotFoundException {
+        Page<ProductData> productDataPage = this.productDataRepository.findAll(PageRequest.of(page, size));
+        List<ProductDataResponse> productDataResponse = productDataPage.getContent()
+                .stream().map(data -> new ProductDataResponse(data.getProductId(),
+                        data.getProductName(),
+                        data.getProductActualPrice(),
+                        data.getDiscountSellingPrice(),
+                        data.getProductSellingPrice(),
+                        data.getProductDescription(),
+                        data.getRating(),
+                        data.getStock(),
+                        data.getCategory().getCategoryName(),
+                        data.getCompanyName(),
+                        data.getProductImage().getImageId())).collect(Collectors.toList());
+        if (productDataResponse.isEmpty()) {
             throw new DataNotFoundException("No Information Found");
+        } else {
+            return new PageOfProductDataResponse(productDataResponse, productDataPage.getNumber(), productDataPage.getSize(), productDataPage.getTotalElements(), productDataPage.getTotalPages(), productDataPage.isLast());
         }
     }
 

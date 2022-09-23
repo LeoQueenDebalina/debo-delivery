@@ -13,7 +13,7 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtil {
-    private String secret = "password";
+    private String secret = "DebGopi@Password";
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);

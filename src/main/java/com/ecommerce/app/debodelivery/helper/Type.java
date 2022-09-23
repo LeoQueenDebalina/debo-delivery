@@ -1,6 +1,6 @@
 package com.ecommerce.app.debodelivery.helper;
 
 public enum Type {
-    ADMIN,
-    USER
+    ROLE_ADMIN,
+    ROLE_USER
 }

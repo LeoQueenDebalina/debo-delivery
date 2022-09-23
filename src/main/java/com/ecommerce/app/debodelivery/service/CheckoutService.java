@@ -32,17 +32,16 @@ public class CheckoutService {
     private OrderFeedbackRepository orderFeedbackRepository;
 
     public ApiResponse buyProduct(OrderedProductRequest orderedProductRequest) {
-        UUID uuid = UUID.randomUUID();
-        if (userRepository.ifNumberIsExist(orderedProductRequest.getUserMobileNumber())) {
+        if (userRepository.existsUserByMobileNumber(orderedProductRequest.getUserMobileNumber())) {
             if (productDataRepository.existsById(orderedProductRequest.getProductId())) {
-                if (deliveryAddressRepository.ifAddressAlreadyExist(userRepository.findByMobileNumber(orderedProductRequest.getUserMobileNumber()))) {
-                    if (productDataRepository.findProductById(orderedProductRequest.getProductId()).getStock() != 0) {
+                if (deliveryAddressRepository.existsDeliveryAddressByUser(userRepository.findByMobileNumber(orderedProductRequest.getUserMobileNumber()))) {
+                    if (productDataRepository.findByProductId(orderedProductRequest.getProductId()).getStock() != 0) {
                         this.checkOutRepository.save(Checkout.builder()
-                                .checkoutId(String.valueOf(uuid))
+                                .checkoutId(UUID.randomUUID().toString())
                                 .paymentType(orderedProductRequest.getPaymentType())
-                                .deliveryAddress(deliveryAddressRepository.findAddress(userRepository.findByMobileNumber(orderedProductRequest.getUserMobileNumber())))
+                                .deliveryAddress(deliveryAddressRepository.findByUser(userRepository.findByMobileNumber(orderedProductRequest.getUserMobileNumber())))
                                 .user(userRepository.findByMobileNumber(orderedProductRequest.getUserMobileNumber()))
-                                .productData(productDataRepository.findProductById(orderedProductRequest.getProductId()))
+                                .productData(productDataRepository.findByProductId(orderedProductRequest.getProductId()))
                                 .orderStatus(OrderStatus.ORDERED)
                                 .orderDate(new Date())
                                 .deliveryDate(new Date(new Date().getTime() + (new Random().nextInt(4) + 6) * 24 * 60 * 60 * 1000))
@@ -71,9 +70,9 @@ public class CheckoutService {
     }
 
     public List<OrderedProductResponse> getOrderedProduct(String mobileNumber) throws DataNotFoundException {
-        if (userRepository.ifNumberIsExist(mobileNumber)) {
+        if (userRepository.existsUserByMobileNumber(mobileNumber)) {
             List<OrderedProductResponse> rData = new ArrayList<>();
-            for (Checkout data : this.checkOutRepository.findOrderByUser(userRepository.findByMobileNumber(mobileNumber))) {
+            for (Checkout data : this.checkOutRepository.findByUser(userRepository.findByMobileNumber(mobileNumber))) {
                 rData.add(new OrderedProductResponse(data.getCheckoutId(), data.getPaymentType(), data.getDeliveryAddress().getDeliveredAddressId(), data.getProductData().getProductId(), data.getOrderStatus(), data.getOrderDate(), data.getDeliveryDate(), data.getDeliveryStatus(), data.getCancelDate(), data.getCancelStatus(), data.getReceivedDate()));
             }
             if (rData.isEmpty()) {
@@ -86,8 +85,8 @@ public class CheckoutService {
     }
 
     public ApiResponse cancelOrder(OrderCancelRequest orderCancelRequest) {
-        if (userRepository.ifNumberIsExist(orderCancelRequest.getUserMobileNumber())) {
-            if (checkOutRepository.orderedProductIsExist(userRepository.findByMobileNumber(orderCancelRequest.getUserMobileNumber()), orderCancelRequest.getCheckoutId())) {
+        if (userRepository.existsUserByMobileNumber(orderCancelRequest.getUserMobileNumber())) {
+            if (checkOutRepository.existsCheckoutByUserAndCheckoutId(userRepository.findByMobileNumber(orderCancelRequest.getUserMobileNumber()), orderCancelRequest.getCheckoutId())) {
                 Optional<Checkout> oldData = this.checkOutRepository.findById(orderCancelRequest.getCheckoutId());
                 if (!oldData.get().getCancelStatus()) {
                     if (oldData.get().getCancelBlockStatus()) {
@@ -120,39 +119,37 @@ public class CheckoutService {
                         newData.setCancelStatus(true);
                         this.checkOutRepository.save(newData);
                         if (orderCancelRequest.getFeedbackMessage() != "") {
-                            UUID uuid = UUID.randomUUID();
                             this.orderCancelDetailsRepository.save(OrderCancelDetails.builder()
-                                    .cancelId(String.valueOf(uuid))
+                                    .cancelId(UUID.randomUUID().toString())
                                     .checkout(oldData.get())
                                     .cancelReason(orderCancelRequest.getFeedbackMessage())
                                     .date(new Date())
                                     .build());
                         }
-                        return new ApiResponse(false, "cancel successfully");
+                        return new ApiResponse(false, "Cancel successfully");
                     } else {
-                        return new ApiResponse(true, "cancellation date expire");
+                        return new ApiResponse(true, "Cancellation date expire");
                     }
                 } else {
                     return new ApiResponse(true, "You have already cancelled the order");
                 }
             } else {
-                return new ApiResponse(true, "order item not found");
+                return new ApiResponse(true, "Order item not found");
             }
         } else {
-            return new ApiResponse(true, "user not found");
+            return new ApiResponse(true, "User not found");
         }
     }
 
     public ApiResponse OrderProductFeedBack(OrderProductFeedBackRequest orderProductFeedBackRequest) {
-        if (userRepository.ifNumberIsExist(orderProductFeedBackRequest.getUserMobileNumber())) {
-            if (checkOutRepository.orderedProductIsExist(userRepository.findByMobileNumber(orderProductFeedBackRequest.getUserMobileNumber()), orderProductFeedBackRequest.getCheckoutId())) {
+        if (userRepository.existsUserByMobileNumber(orderProductFeedBackRequest.getUserMobileNumber())) {
+            if (checkOutRepository.existsCheckoutByUserAndCheckoutId(userRepository.findByMobileNumber(orderProductFeedBackRequest.getUserMobileNumber()), orderProductFeedBackRequest.getCheckoutId())) {
                 Optional<Checkout> oldData = this.checkOutRepository.findById(orderProductFeedBackRequest.getCheckoutId());
                 if (!oldData.get().getCancelStatus()) {
                     if (oldData.get().getDeliveryStatus()) {
                         if (orderProductFeedBackRequest.getFeedbackMessage() != "") {
-                            UUID uuid = UUID.randomUUID();
                             this.orderFeedbackRepository.save(OrderFeedback.builder()
-                                    .feedBackId(String.valueOf(uuid))
+                                    .feedBackId(UUID.randomUUID().toString())
                                     .checkout(oldData.get())
                                     .feedBackMessage(orderProductFeedBackRequest.getFeedbackMessage())
                                     .date(new Date())
@@ -176,18 +173,17 @@ public class CheckoutService {
     }
 
     public ApiResponse orderProductFromCart(CartProductOrderedRequest cartProductOrderedRequest) {
-        if (userRepository.ifNumberIsExist(cartProductOrderedRequest.getUserMobileNumber())) {
-            if (addToCartRepository.isExistCartCheckByUser(userRepository.findByMobileNumber(cartProductOrderedRequest.getUserMobileNumber()))) {
-                if (deliveryAddressRepository.ifAddressAlreadyExist(userRepository.findByMobileNumber(cartProductOrderedRequest.getUserMobileNumber()))) {
-                    for (AddToCart data : this.addToCartRepository.selectAllCartDataByUser(userRepository.findByMobileNumber(cartProductOrderedRequest.getUserMobileNumber()))) {
-                        UUID uuid = UUID.randomUUID();
-                        if (productDataRepository.existsById(data.getProductData().getProductId()) && productDataRepository.findProductById(data.getProductData().getProductId()).getStock() != 0) {
+        if (userRepository.existsUserByMobileNumber(cartProductOrderedRequest.getUserMobileNumber())) {
+            if (addToCartRepository.existsAddToCartByUser(userRepository.findByMobileNumber(cartProductOrderedRequest.getUserMobileNumber()))) {
+                if (deliveryAddressRepository.existsDeliveryAddressByUser(userRepository.findByMobileNumber(cartProductOrderedRequest.getUserMobileNumber()))) {
+                    for (AddToCart data : this.addToCartRepository.findByUser(userRepository.findByMobileNumber(cartProductOrderedRequest.getUserMobileNumber()))) {
+                        if (productDataRepository.existsById(data.getProductData().getProductId()) && productDataRepository.findByProductId(data.getProductData().getProductId()).getStock() != 0) {
                             this.checkOutRepository.save(Checkout.builder()
-                                    .checkoutId(String.valueOf(uuid))
+                                    .checkoutId(UUID.randomUUID().toString())
                                     .paymentType(cartProductOrderedRequest.getPaymentType())
-                                    .deliveryAddress(deliveryAddressRepository.findAddress(userRepository.findByMobileNumber(cartProductOrderedRequest.getUserMobileNumber())))
+                                    .deliveryAddress(deliveryAddressRepository.findByUser(userRepository.findByMobileNumber(cartProductOrderedRequest.getUserMobileNumber())))
                                     .user(userRepository.findByMobileNumber(cartProductOrderedRequest.getUserMobileNumber()))
-                                    .productData(productDataRepository.findProductById(data.getProductData().getProductId()))
+                                    .productData(productDataRepository.findByProductId(data.getProductData().getProductId()))
                                     .orderStatus(OrderStatus.ORDERED)
                                     .orderDate(new Date())
                                     .deliveryDate(new Date(new Date().getTime() + (new Random().nextInt(4) + 6) * 24 * 60 * 60 * 1000))

@@ -22,8 +22,8 @@ public class DeliveredAddressService {
     private DeliveryAddressRepository deliveryAddressRepository;
 
     public DeliveryAddressResponse getDeliveryAddressByUserPhoneNumber(String userPhone) throws DataNotFoundException {
-        if (userRepository.ifNumberIsExist(userPhone)) {
-            DeliveryAddress data = this.deliveryAddressRepository.findAddress(userRepository.findByMobileNumber(userPhone));
+        if (userRepository.existsUserByMobileNumber(userPhone)) {
+            DeliveryAddress data = this.deliveryAddressRepository.findByUser(userRepository.findByMobileNumber(userPhone));
             if (data != null) {
                 return new DeliveryAddressResponse(data.getDeliveredAddressId(),
                         data.getFullName(),
@@ -43,11 +43,10 @@ public class DeliveredAddressService {
     }
 
     public ApiResponse addAddress(DeliveryAddressRequest deliveryAddress) {
-        UUID uuid = UUID.randomUUID();
-        if (userRepository.ifNumberIsExist(deliveryAddress.getUserPhoneNumber())) {
-            if (!deliveryAddressRepository.ifAddressAlreadyExist(userRepository.findByMobileNumber(deliveryAddress.getUserPhoneNumber()))) {
+        if (userRepository.existsUserByMobileNumber(deliveryAddress.getUserPhoneNumber())) {
+            if (!deliveryAddressRepository.existsDeliveryAddressByUser(userRepository.findByMobileNumber(deliveryAddress.getUserPhoneNumber()))) {
                 this.deliveryAddressRepository.save(DeliveryAddress.builder()
-                        .deliveredAddressId(String.valueOf(uuid))
+                        .deliveredAddressId(UUID.randomUUID().toString())
                         .user(userRepository.findByMobileNumber(deliveryAddress.getUserPhoneNumber()))
                         .fullName(deliveryAddress.getFullName())
                         .phoneNumber(deliveryAddress.getPhoneNumber())
@@ -71,10 +70,10 @@ public class DeliveredAddressService {
 
 
     public ApiResponse updateAddress(DeliveryAddressRequest deliveryAddress) {
-        if (userRepository.ifNumberIsExist(deliveryAddress.getUserPhoneNumber())) {
-            if (deliveryAddressRepository.ifAddressAlreadyExist(userRepository.findByMobileNumber(deliveryAddress.getUserPhoneNumber()))) {
+        if (userRepository.existsUserByMobileNumber(deliveryAddress.getUserPhoneNumber())) {
+            if (deliveryAddressRepository.existsDeliveryAddressByUser(userRepository.findByMobileNumber(deliveryAddress.getUserPhoneNumber()))) {
                 DeliveryAddress newData = new DeliveryAddress();
-                DeliveryAddress oldData = this.deliveryAddressRepository.findAddress(userRepository.findByMobileNumber(deliveryAddress.getUserPhoneNumber()));
+                DeliveryAddress oldData = this.deliveryAddressRepository.findByUser(userRepository.findByMobileNumber(deliveryAddress.getUserPhoneNumber()));
                 newData.setDeliveredAddressId(oldData.getDeliveredAddressId());
                 if (deliveryAddress.getFullName() != "") {
                     newData.setFullName(deliveryAddress.getFullName());

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 
@@ -17,21 +18,18 @@ public class ProductDataRequest {
     @NotBlank@Pattern(regexp = "[a-z\\d .,]+", message = "should contain character, dot, number, comma and space only")
     @NotBlank
     private String productName;
-    @NotBlank
+    @NotNull
     private Integer productActualPrice;
-    @NotBlank
+    @NotNull
     private Integer discountSellingPrice;
     @NotBlank
     private String productDescription;
-    @NotBlank
+    @NotNull
     private Float rating;
-    @Pattern(regexp = "[\\d]+")
-    @NotBlank
+    @NotNull
     private Integer stock;
-    @Pattern(regexp = "[\\d]" )
     @NotBlank
     private String categoryName;
-    @Pattern(regexp = "[\\d]" )
     @NotBlank
     private String companyName;
     @Pattern(regexp = "^(.+)\\/([^\\/]+)$" )

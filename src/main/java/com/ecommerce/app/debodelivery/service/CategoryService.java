@@ -17,7 +17,7 @@ public class CategoryService {
 
     public ApiResponse addCategory(CategoryRequest categoryRequest) {
         UUID uuid = UUID.randomUUID();
-        if (!this.categoryRepository.findByCategory(categoryRequest.getCategoryName())) {
+        if (!this.categoryRepository.existsCategoryByCategoryNameContaining(categoryRequest.getCategoryName())) {
             this.categoryRepository.save(Category.builder().categoryId(String.valueOf(uuid)).categoryName(categoryRequest.getCategoryName()).build());
             return new ApiResponse(false, "Category add successful");
         } else {
@@ -40,7 +40,7 @@ public class CategoryService {
 
     public ApiResponse updateCategory(String categoryOldName, String categoryUpdatedName) {
         if (!categoryOldName.equals(categoryUpdatedName)) {
-            Category data = this.categoryRepository.findByCategoryName(categoryOldName);
+            Category data = this.categoryRepository.findByCategoryNameContaining(categoryOldName);
             if (data != null) {
                 this.categoryRepository.save(Category.builder()
                         .categoryId(data.getCategoryId())

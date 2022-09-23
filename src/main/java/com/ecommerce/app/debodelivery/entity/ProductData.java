@@ -40,7 +40,7 @@ public class ProductData {
     private ProductImage productImage;
     @Column(name = "companyName")
     private String companyName;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "categoryId", referencedColumnName = "categoryId")
     private Category category;
 }
