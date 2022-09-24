@@ -7,6 +7,7 @@ import com.ecommerce.app.debodelivery.model.DeliveryAddressResponse;
 import com.ecommerce.app.debodelivery.service.DeliveredAddressService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class DeliveryAddressController {
 
     @ApiOperation(value = "This method is used to get address by phone number.")
     @GetMapping("/viewAddress/{userPhone}")
-    public DeliveryAddressResponse getDeliveryAddressByUserPhoneNumber(@PathVariable String userPhone) throws DataNotFoundException {
+    public DeliveryAddressResponse getDeliveryAddressByUserPhoneNumber(@PathVariable @ApiParam(name = "Mobile Number", value = "Mobile Number", example = "123456789", required = true) String userPhone) throws DataNotFoundException {
         return this.deliveredAddressService.getDeliveryAddressByUserPhoneNumber(userPhone);
     }
 

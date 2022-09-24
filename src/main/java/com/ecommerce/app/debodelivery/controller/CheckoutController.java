@@ -6,6 +6,7 @@ import com.ecommerce.app.debodelivery.model.*;
 import com.ecommerce.app.debodelivery.service.CheckoutService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,13 +40,13 @@ public class CheckoutController {
 
     @ApiOperation(value = "This method is used to get order product by mobile number.")
     @GetMapping("/getOrderedProduct/mobileNumber/{mobileNumber}")
-    public List<OrderedProductResponse> getOrderedProduct(@PathVariable String mobileNumber) throws DataNotFoundException {
+    public List<OrderedProductResponse> getOrderedProduct(@PathVariable @ApiParam(name = "Mobile Number", value = "Mobile Number", example = "123456789", required = true) String mobileNumber) throws DataNotFoundException {
         return this.checkoutService.getOrderedProduct(mobileNumber);
     }
 
     @ApiOperation(value = "This method is used to cancel order.")
     @DeleteMapping("/cancelOrder")
-    public ApiResponse cancelOrder(@RequestBody OrderCancelRequest orderCancelRequest) {
+    public ApiResponse cancelOrder(@Valid @RequestBody OrderCancelRequest orderCancelRequest) {
         return this.checkoutService.cancelOrder(orderCancelRequest);
     }
 }

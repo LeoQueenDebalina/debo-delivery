@@ -6,6 +6,7 @@ import com.ecommerce.app.debodelivery.model.CategoryRequest;
 import com.ecommerce.app.debodelivery.service.CategoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +34,7 @@ public class CategoryController {
 
     @ApiOperation(value = "This method is used to update category.")
     @PutMapping("/updateCategory/categoryOldName/{categoryOldName}/categoryUpdatedName/{categoryUpdatedName}")
-    public ApiResponse updateCategory(@PathVariable String categoryOldName, @PathVariable String categoryUpdatedName) {
+    public ApiResponse updateCategory(@PathVariable @ApiParam(name = "Old Name", value = "Old Name", required = true) String categoryOldName, @PathVariable @ApiParam(name = "New Name", value = "New Name", required = true) String categoryUpdatedName) {
         return this.categoryService.updateCategory(categoryOldName, categoryUpdatedName);
     }
 }

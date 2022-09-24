@@ -11,6 +11,7 @@ import com.ecommerce.app.debodelivery.service.UserService;
 import com.ecommerce.app.debodelivery.util.JwtUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -50,13 +51,13 @@ public class UserController {
 
     @ApiOperation(value = "This method is used to delete the user.")
     @DeleteMapping("/deleteUser/{mobileNumber}/status/{status}")
-    public ApiResponse deleteUser(@PathVariable("mobileNumber") String mobileNumber, @PathVariable Boolean status) {
+    public ApiResponse deleteUser(@PathVariable("mobileNumber") @ApiParam(name = "Mobile Number", value = "Mobile Number", example = "123456789", required = true) String mobileNumber, @PathVariable@ApiParam(name = "Status", value = "Status", example = "123456789", required = true) Boolean status) {
         return this.userService.deleteUser(mobileNumber, status);
     }
 
     @ApiOperation(value = "This method is used to get the user.")
     @GetMapping("/getUserByMobileNumber/{mobileNumber}")
-    public UserResponse getUserByMobileNumber(@PathVariable("mobileNumber") String mobileNumber) throws DataNotFoundException {
+    public UserResponse getUserByMobileNumber(@PathVariable("mobileNumber") @ApiParam(name = "Mobile Number", value = "Mobile Number", example = "123456789", required = true) String mobileNumber) throws DataNotFoundException {
         return this.userService.getUserByMobileNumber(mobileNumber);
     }
 
@@ -78,13 +79,13 @@ public class UserController {
 
     @ApiOperation(value = "This method is used to request for verification mail.")
     @PostMapping("/emailVerify/{mobileNumber}")
-    public ApiResponse emailVerify(@PathVariable String mobileNumber) throws BadCredentialsException {
+    public ApiResponse emailVerify(@PathVariable @ApiParam(name = "Mobile Number", value = "Mobile Number", example = "123456789", required = true) String mobileNumber) throws BadCredentialsException {
         return this.userService.emailVerify(mobileNumber);
     }
 
     @ApiOperation(value = "This method is used to verify email.")
     @GetMapping("/registration/confirm")
-    public ApiResponse generateToken(@RequestParam(value = "token", defaultValue = "null") String token) {
+    public ApiResponse generateToken(@RequestParam(value = "token", defaultValue = "null") @ApiParam(name = "Token", value = "Token",required = true) String token) {
         return this.userService.confirmToken(token);
     }
 }
