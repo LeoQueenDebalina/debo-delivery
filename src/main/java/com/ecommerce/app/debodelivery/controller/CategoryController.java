@@ -8,6 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,6 +21,7 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "This method is used to add new category.")
     @PostMapping("/addCategory")
     public ApiResponse addCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
@@ -32,6 +34,7 @@ public class CategoryController {
         return this.categoryService.getAllCategory();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "This method is used to update category.")
     @PutMapping("/updateCategory/categoryOldName/{categoryOldName}/categoryUpdatedName/{categoryUpdatedName}")
     public ApiResponse updateCategory(@PathVariable @ApiParam(name = "Old Name", value = "Old Name", required = true) String categoryOldName, @PathVariable @ApiParam(name = "New Name", value = "New Name", required = true) String categoryUpdatedName) {
